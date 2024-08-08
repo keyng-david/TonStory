@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import * as functions from 'firebase-functions';
 import { validate, parse, type InitData } from '@tma.js/init-data-node';
 
-
 function setInitData(res: Response, initData: InitData): void {
   res.locals.initData = initData;
 }
@@ -25,7 +24,7 @@ export const auth = async (request: Request, response: Response, next: any) => {
             expiresIn: 3600,
           });
           setInitData(response, parse(authData));
-          console.log('Successfully verified token')
+          console.log('Successfully verified token');
           return next();
         } catch (e) {
           return next(e);
