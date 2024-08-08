@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import * as functions from 'firebase-functions';
 import { formatTonStoryUser, getOrCreateTelegramUser } from "../users";
-
 import { Telegraf } from "telegraf";
 
 const bot = new Telegraf(functions.config().tgbot.key);
@@ -17,4 +16,4 @@ export const telegramBotUpdate = async (req: Request, res: Response) => {
   }
   bot.telegram.sendMessage(from.id, `Welcome to TonStory ${from.first_name}!`);
   res.status(200).send("Telegram update received!");
-}
+};
