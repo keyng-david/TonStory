@@ -39,3 +39,5 @@ export const telegramBotUpdate = async (req: Request, res: Response) => {
     res.status(500).send("There was an error handling Telegram bot update");
   }
 };
+
+// Ensure there's a newline at the end of the file
