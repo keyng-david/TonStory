@@ -1,6 +1,6 @@
-import { updatePoints } from "../api/index.ts";
-import { ATTACK_INTERVAL, Keys, MOVE_SPEED } from "../utils/gameConfig.tsx";
-import { setupGameEnvironment } from "../utils/gameController.tsx";
+import { updatePoints } from "../api/index";
+import { ATTACK_INTERVAL, Keys, MOVE_SPEED } from "../utils/gameConfig";
+import { setupGameEnvironment } from "../utils/gameController";
 import { KaboomCtx} from "kaboom";
 
 export default function loadGameScene(k: KaboomCtx, dispatch: any) {
