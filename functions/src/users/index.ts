@@ -19,6 +19,12 @@ export const loadUserData = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Retrieves or creates a Telegram user.
+ * @param user - The user data.
+ * @param referrer - The referrer ID.
+ * @returns The user data.
+ */
 export async function getOrCreateTelegramUser(
   user: TonStoryUser,
   referrer?: string
@@ -54,12 +60,17 @@ export async function getOrCreateTelegramUser(
   });
 }
 
+/**
+ * Formats the TonStory user data.
+ * @param user - The Telegram user data.
+ * @returns The formatted TonStory user data.
+ */
 export function formatTonStoryUser(
   user: TelegramMiniAppUser | TelegramBotUser
 ): TonStoryUser {
   // Determine if the user is a TelegramMiniAppUser
   const isMiniAppUser = (
-    user: any
+    user: any // Replace 'any' with a more specific type if possible
   ): user is TelegramMiniAppUser => "allowsWriteToPm" in user;
 
   return {
@@ -79,3 +90,5 @@ export function formatTonStoryUser(
     createdAt: new Date(),
   };
 }
+
+// Ensure there's a newline at the end of the file
