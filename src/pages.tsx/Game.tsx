@@ -22,7 +22,7 @@ const Container = styled.div`
 `;
 
 export default function Game() {
-  const {state, dispatch} = useContext(store);
+  const { state, dispatch } = useContext(store);
 
   useEffect(() => {
     loadPlayerSprites(k);
@@ -30,18 +30,39 @@ export default function Game() {
     loadGameSounds(k);
     loadGameScene(k, dispatch);
   }, []);
-  
+
   return (
     <Container>
       <Stats>
-        <Statistic valueStyle={{ color: 'white', fontSize: 16 }} title="Points" value={state.points} />
-        <Statistic valueStyle={{ color: 'white', fontSize: 16 }} title="Level" value={state.level} />
-        <Statistic valueStyle={{ color: 'white', fontSize: 16 }} title="Username" value={state.username} />
+        <Statistic 
+          valueStyle={{ color: 'white', fontSize: 16 }} 
+          title="Points" 
+          value={state.points} 
+        />
+        <Statistic 
+          valueStyle={{ color: 'white', fontSize: 16 }} 
+          title="Level" 
+          value={state.level} 
+        />
+        <Statistic 
+          valueStyle={{ color: 'white', fontSize: 16 }} 
+          title="Username" 
+          value={state.username} 
+        />
       </Stats>
-      <Stats style={{bottom: 0}}>
+      <Stats style={{ bottom: 0 }}>
         <FireOutlined />
-        <Progress style={{padding: 10, marginRight: 25, color: 'blue'}} size="small" percent={(state.stamina / (state.level * 1000)) * 100 : 0} format={(percent) => <p style={{color: 'white'}}>{Math.round((percent / 100) * (state.level * 1000))}</p>} />
+        <Progress
+          style={{ padding: 10, marginRight: 25, color: 'blue' }} 
+          size="small"
+          percent={state.stamina ? (state.stamina / (state.level * 1000)) * 100 : 0}
+          format={(percent) => (
+            <p style={{ color: 'white' }}>
+              {Math.round((percent / 100) * (state.level * 1000))}
+            </p>
+          )} 
+        />
       </Stats>
     </Container>
-  )
+  );
 }
