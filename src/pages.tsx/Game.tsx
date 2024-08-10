@@ -40,7 +40,7 @@ export default function Game() {
       </Stats>
       <Stats style={{bottom: 0}}>
         <FireOutlined />
-        <Progress style={{padding: 10, marginRight: 25, color: 'blue'}} size="small" percent={(state.stamina / (state.level * 1000)) * 100} format={(percent) => <p style={{color: 'white'}}>{Math.round((percent / 100) * (state.level * 1000))}</p>} />
+        <Progress style={{padding: 10, marginRight: 25, color: 'blue'}} size="small" percent={(state.stamina / (state.level * 1000)) * 100 : 0} format={(percent) => <p style={{color: 'white'}}>{Math.round((percent / 100) * (state.level * 1000))}</p>} />
       </Stats>
     </Container>
   )
