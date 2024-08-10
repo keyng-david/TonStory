@@ -2,6 +2,11 @@ import { Request, Response } from "express";
 import * as functions from "firebase-functions";
 import { validate, parse, type InitData } from "@tma.js/init-data-node";
 
+/**
+ * Sets the init data in the response locals.
+ * @param res - The response object.
+ * @param initData - The init data to set.
+ */
 function setInitData(res: Response, initData: InitData): void {
   res.locals.initData = initData;
 }
@@ -9,7 +14,7 @@ function setInitData(res: Response, initData: InitData): void {
 export const auth = async (
   request: Request,
   response: Response,
-  next: any
+  next: Function // Change 'any' to 'Function'
 ) => {
   try {
     console.log("Request to: ", request.url);
