@@ -62,3 +62,5 @@ export const updateLevel = async (req: Request, res: Response) => {
     res.status(500).send("There was an error updating level");
   }
 };
+
+// Ensure there's a newline at the end of the file
