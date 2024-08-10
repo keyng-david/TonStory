@@ -1,11 +1,11 @@
-import loadGameScene from "../components/GameScene.tsx";
+import loadGameScene from "../components/GameScene";
 import { useContext, useEffect } from "react";
-import { loadEnvironmentAssets, loadGameSounds, loadPlayerSprites } from "../utils/assetloader.tsx";
-import { store } from "../utils/store.tsx";
+import { loadEnvironmentAssets, loadGameSounds, loadPlayerSprites } from "../utils/assetloader";
+import { store } from "../utils/store";
 import styled from "styled-components";
 import { Progress, Statistic } from "antd";
-import k from '../utils/kaboom.tsx';
-import { Label } from "../utils/styled.tsx";
+import k from '../utils/kaboom';
+import { Label } from "../utils/styled";
 import { FireOutlined } from "@ant-design/icons";
 
 const Stats = styled.div`
