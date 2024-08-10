@@ -34,4 +34,4 @@ export const api = functions
   .runWith({
     memory: "512MB",
   })
-  .https.onRequest(app);
+  .https.onRequest(app); // Ensure onRequest is used if not remove the variable
