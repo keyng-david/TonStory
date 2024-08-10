@@ -56,7 +56,9 @@ export default function Game() {
           style={{ padding: 10, marginRight: 25, color: 'blue' }} 
           size="small"
           percent={state.stamina ? (state.stamina / (state.level * 1000)) * 100 : 0}
-          format={(percent) => (
+          format={(percent) => {
+    const validPercent = percent ?? 0; // Ensure percent is not undefined
+    return (
             <p style={{ color: 'white' }}>
               {Math.round((percent / 100) * (state.level * 1000))}
             </p>
