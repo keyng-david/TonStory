@@ -1,3 +1,6 @@
+declare module '*.png';
+declare module '*.wav';
+
 import GreenSlimeSprite from './Character/GreenSlime.png';
 import GroundBottomRight from './Platformer/Ground_07.png';
 import SwordsmanSprite from './Character/Swordsman.png';
