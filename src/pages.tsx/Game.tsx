@@ -5,7 +5,6 @@ import { store } from "../utils/store";
 import styled from "styled-components";
 import { Progress, Statistic } from "antd";
 import k from '../utils/kaboom';
-import { Label } from "../utils/styled";
 import { FireOutlined } from "@ant-design/icons";
 
 const Stats = styled.div`
@@ -57,12 +56,13 @@ export default function Game() {
           size="small"
           percent={state.stamina ? (state.stamina / (state.level * 1000)) * 100 : 0}
           format={(percent) => {
-    const validPercent = percent ?? 0; // Ensure percent is not undefined
-    return (
-            <p style={{ color: 'white' }}>
-              {Math.round((percent / 100) * (state.level * 1000))}
-            </p>
-          )} 
+            const validPercent = percent ?? 0; // Ensure percent is not undefined
+            return (
+              <p style={{ color: 'white' }}>
+                {Math.round((validPercent / 100) * (state.level * 1000))}
+              </p>
+            );
+          }} 
         />
       </Stats>
     </Container>
