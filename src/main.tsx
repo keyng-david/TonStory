@@ -39,7 +39,7 @@ const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
   <SDKProvider>
-    <SDKProviderError error={/* insert appropriate error object */} />
+    <SDKProviderError error={new Error("Sample error message")} />
     <SDKProviderLoading />
     <SDKInitialState />
     <StateProvider>
