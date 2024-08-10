@@ -22,7 +22,8 @@ import attackAudio from './Audio/Movement/attack.wav';
 export { GreenSlimeSprite, SwordsmanSprite };
 
 // Platform Sprites
-export { Ground, GroundLeft, GroundRight, GroundBottom, GroundBottomLeft, GroundBottomRight, GroundFloatLeft, GroundFloatRight };
+export { Ground, GroundLeft, GroundRight, GroundBottom, GroundBottomLeft,
+GroundBottomRight, GroundFloatLeft, GroundFloatRight };
 
 // Building Sprites
 export { Wall_C_01, Wall_C_02, Wall_C_03 };
