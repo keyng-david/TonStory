@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import * as functions from 'firebase-functions';
-import { validate, parse } from '@tma.js/init-data-node';
-import type { InitData } from '@tma.js/sdk';
+import { validate, parse, type InitData } from '@tma.js/init-data-node';
 
 /**
  * Sets the init data in the response locals.
@@ -23,33 +22,36 @@ export const auth = async (request: Request, response: Response, next: Function)
     console.log("Request to: ", request.url);
     console.log('Running auth middleware');
 
+    // Bypass the middleware for Telegram bot updates
     if (request.url === '/telegram-bot-update') {
       return next();
     }
 
+    // Extract the authorization header
     const [authType, authData = ''] = (request.header('authorization') || '').split(' ');
 
     switch (authType) {
       case 'tma':
         try {
+          // Validate the init data using the Telegram bot key from Firebase functions config
           validate(authData, functions.config().tgbot.key, {
-            expiresIn: 3600,
+            expiresIn: 3600, // Token expiration time in seconds
           });
 
           // Parse the auth data
           const parsedInitData = parse(authData);
 
-          // If canSendAfter is a number, convert it to a Date
-          const canSendAfterDate = parsedInitData.canSendAfter 
-            ? new Date(parsedInitData.canSendAfter) 
-            : undefined;
+          // Create the InitData object with required properties
+          const initData: InitData = {
+            authDate: parsedInitData.authDate,
+            hash: parsedInitData.hash,
+            queryId: parsedInitData.queryId, // Example of another field
+            // Ensure the correct type for canSendAfterDate
+            canSendAfterDate: parsedInitData.canSendAfter ? new Date(parsedInitData.canSendAfter * 1000) : undefined,
+          };
 
-          // Set the init data
-          setInitData(response, {
-            ...parsedInitData,  // Spread parsedInitData fields
-            canSendAfterDate,  // Override canSendAfterDate with correctly typed value
-          });
-
+          // Set the init data in the response locals for further use
+          setInitData(response, initData);
           console.log('Successfully verified token');
           return next();
         } catch (e) {
