@@ -3,7 +3,16 @@ import * as functions from 'firebase-functions';
 import { validate, parse } from '@tma.js/init-data-node';
 import { InitData } from '@tma.js/sdk';
 
-function setInitData(res: Response, initData: InitData): void {
+function setInitData(res: Response, parsedData: InitDataParsed): void {
+  const initData: InitData = {
+    initData: parsedData.initData || '',
+    canSendAfter: parsedData.canSendAfter || new Date(),
+    chat: parsedData.chat || '',
+    chatType: parsedData.chatType || '',
+    userId: parsedData.userId || '',
+    user: parsedData.user || '',
+    hash: parsedData.hash || '',
+  };
   res.locals.initData = initData;
 }
 
@@ -24,7 +33,8 @@ export const auth = async (request: Request, response: Response, next: any) => {
           validate(authData, functions.config().tgbot.key, {
             expiresIn: 3600,
           });
-          setInitData(response, parse(authData));
+          const parsedData = parse(authData);
+          setInitData(response, parsedData);
           console.log('Successfully verified token');
           return next();
         } catch (e) {
