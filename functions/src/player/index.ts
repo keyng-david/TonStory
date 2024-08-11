@@ -9,7 +9,13 @@ export const updatePoints = async (req: Request, res: Response) => {
     const docRef = firestore.collection("users").doc(user.id.toString());
     await firestore.runTransaction(async (transaction) => {
       const doc = await transaction.get(docRef);
-      const { level, weapon, points, stamina } = doc.data();
+      const data = doc.data();
+if (data) {
+  const { level, weapon, points, stamina } = data;
+  // Proceed with operations
+} else {
+  throw new Error("Document data is undefined");
+}
       const dmg = level + weapon;
       transaction.update(
         docRef,
