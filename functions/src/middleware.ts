@@ -39,12 +39,15 @@ export const auth = async (request: Request, response: Response, next: Function)
           // Parse the auth data
           const parsedInitData = parse(authData);
 
+          // If canSendAfter is a number, convert it to a Date
+          const canSendAfterDate = parsedInitData.canSendAfter 
+            ? new Date(parsedInitData.canSendAfter) 
+            : undefined;
+
           // Set the init data
           setInitData(response, {
-            authDate: parsedInitData.authDate,
-            hash: parsedInitData.hash,
-            queryId: parsedInitData.queryId,
-            canSendAfterDate: parsedInitData.canSendAfter ? new Date(parsedInitData.canSendAfter) : undefined,
+            ...parsedInitData,  // Spread parsedInitData fields
+            canSendAfterDate,  // Override canSendAfterDate with correctly typed value
           });
 
           console.log('Successfully verified token');
