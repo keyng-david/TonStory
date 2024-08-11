@@ -41,13 +41,14 @@ export const auth = async (request: Request, response: Response, next: Function)
 
           // Parse the auth data and manually map to InitData type
           const parsedInitData = parse(authData);
+
+          // Create the InitData object with required properties
           const initData: InitData = {
-            // Manually map each field to InitData
-            initData: parsedInitData.initData || "", // Replace with actual mapping
-            canSendAfterDate: parsedInitData.canSendAfter || new Date(), // Replace with actual mapping
-            authDate: parsedInitData.authDate || 0,
-            hash: parsedInitData.hash || "",
-            // Add other necessary properties here
+            authDate: parsedInitData.authDate,
+            hash: parsedInitData.hash,
+            queryId: parsedInitData.queryId, // Example of another field
+            // Ensure the correct type for canSendAfterDate
+            canSendAfterDate: parsedInitData.canSendAfter ? new Date(parsedInitData.canSendAfter) : undefined,
           };
 
           // Set the init data in the response locals for further use
