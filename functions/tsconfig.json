@@ -7,8 +7,10 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "allowImportingTsExtensions": true,
   "compileOnSave": true,
-  "include": ["src"],
+  "include": ["src"]
 }
