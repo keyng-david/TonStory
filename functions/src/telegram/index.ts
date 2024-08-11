@@ -1,8 +1,18 @@
 import { Request, Response } from "express";
 import firestore from "../firestore";
-import { bot } from "./bot";
+import * as functions from 'firebase-functions';
+import { Telegraf } from 'telegraf';
 import { getOrCreateTelegramUser } from "../users";
 import { formatTonStoryUser } from "../users";
+
+// Retrieve the bot token from Firebase config
+const botToken = functions.config().tgbot.key;
+
+if (!botToken) {
+  throw new Error("Bot token is missing");
+}
+
+const bot = new Telegraf(botToken);
 
 export const telegramBotUpdate = async (req: Request, res: Response) => {
   try {
@@ -26,9 +36,9 @@ export const telegramBotUpdate = async (req: Request, res: Response) => {
         }
 
         if (message.text === "/start") {
-          await bot.sendMessage(userId, `Welcome, ${userData.firstName}!`);
+          await bot.telegram.sendMessage(userId, `Welcome, ${userData.firstName}!`);
         } else {
-          await bot.sendMessage(userId, "Sorry, I didn't understand that.");
+          await bot.telegram.sendMessage(userId, "Sorry, I didn't understand that.");
         }
       });
     }
