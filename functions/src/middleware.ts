@@ -23,36 +23,30 @@ export const auth = async (request: Request, response: Response, next: Function)
     console.log("Request to: ", request.url);
     console.log('Running auth middleware');
 
-    // Bypass the middleware for Telegram bot updates
     if (request.url === '/telegram-bot-update') {
       return next();
     }
 
-    // Extract the authorization header
     const [authType, authData = ''] = (request.header('authorization') || '').split(' ');
 
     switch (authType) {
       case 'tma':
         try {
-          // Validate the init data using the Telegram bot key from Firebase functions config
           validate(authData, functions.config().tgbot.key, {
-            expiresIn: 3600, // Token expiration time in seconds
+            expiresIn: 3600,
           });
 
-          // Parse the auth data and manually map to InitData type
+          // Parse the auth data
           const parsedInitData = parse(authData);
 
-          // Create the InitData object with required properties
-          const initData: InitData = {
+          // Set the init data
+          setInitData(response, {
             authDate: parsedInitData.authDate,
             hash: parsedInitData.hash,
-            queryId: parsedInitData.queryId, // Example of another field
-            // Ensure the correct type for canSendAfterDate
+            queryId: parsedInitData.queryId,
             canSendAfterDate: parsedInitData.canSendAfter ? new Date(parsedInitData.canSendAfter) : undefined,
-          };
+          });
 
-          // Set the init data in the response locals for further use
-          setInitData(response, initData);
           console.log('Successfully verified token');
           return next();
         } catch (e) {
