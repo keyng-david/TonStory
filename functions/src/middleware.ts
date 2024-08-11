@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as functions from 'firebase-functions';
-import { validate, parse, type InitData, type InitDataParsed } from '@tma.js/init-data-node';
+import { validate, parse } from '@tma.js/init-data-node';
+import type { InitData } from '@tma.js/sdk';
 
 /**
  * Sets the init data in the response locals.
@@ -38,14 +39,15 @@ export const auth = async (request: Request, response: Response, next: Function)
             expiresIn: 3600, // Token expiration time in seconds
           });
 
-          // Parse the init data and cast it to InitData type
-          const parsedInitData: InitDataParsed = parse(authData);
+          // Parse the auth data and manually map to InitData type
+          const parsedInitData = parse(authData);
           const initData: InitData = {
-            initData: parsedInitData.initData,
-            canSendAfter: parsedInitData.canSendAfter,
-            authDate: parsedInitData.authDate,
-            hash: parsedInitData.hash,
-            ...parsedInitData, // Include other properties from InitDataParsed
+            // Manually map each field to InitData
+            initData: parsedInitData.initData || "", // Replace with actual mapping
+            canSendAfterDate: parsedInitData.canSendAfter || new Date(), // Replace with actual mapping
+            authDate: parsedInitData.authDate || 0,
+            hash: parsedInitData.hash || "",
+            // Add other necessary properties here
           };
 
           // Set the init data in the response locals for further use
