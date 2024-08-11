@@ -9,22 +9,16 @@ export const updatePoints = async (req: Request, res: Response) => {
     const docRef = firestore.collection("users").doc(user.id.toString());
     await firestore.runTransaction(async (transaction) => {
       const doc = await transaction.get(docRef);
+      if (!doc.exists) throw new Error("Document does not exist");
       const data = doc.data();
-if (data) {
-  const { level, weapon, points, stamina } = data;
-  // Proceed with operations
-} else {
-  throw new Error("Document data is undefined");
-}
+      if (!data) throw new Error("No data found in document");
+
+      const { level, weapon, points, stamina } = data;
       const dmg = level + weapon;
-      transaction.update(
-        docRef,
-        {
-          points: points + dmg,
-          stamina: stamina - 1,
-        },
-        { merge: true }
-      );
+      transaction.update(docRef, {
+        points: points + dmg,
+        stamina: stamina - 1,
+      });
     });
 
     res.status(200).send("Points updated");
@@ -42,7 +36,11 @@ export const updateLevel = async (req: Request, res: Response) => {
     const docRef = firestore.collection("users").doc(user.id.toString());
     await firestore.runTransaction(async (transaction) => {
       const doc = await transaction.get(docRef);
-      const { level, points } = doc.data();
+      if (!doc.exists) throw new Error("Document does not exist");
+      const data = doc.data();
+      if (!data) throw new Error("No data found in document");
+
+      const { level, points } = data;
       const newLevel = level + 1;
       const newStamina = newLevel * 1000;
       const newLevelCosts = newLevel * 1000;
@@ -51,15 +49,11 @@ export const updateLevel = async (req: Request, res: Response) => {
         throw new Error("Insufficient points to level up");
       }
 
-      transaction.update(
-        docRef,
-        {
-          points: points - newLevelCosts,
-          level: newLevel,
-          stamina: newStamina,
-        },
-        { merge: true }
-      );
+      transaction.update(docRef, {
+        points: points - newLevelCosts,
+        level: newLevel,
+        stamina: newStamina,
+      });
     });
 
     res.status(200).send("Level updated");
@@ -68,5 +62,3 @@ export const updateLevel = async (req: Request, res: Response) => {
     res.status(500).send("There was an error updating level");
   }
 };
-
-// Ensure there's a newline at the end of the file
