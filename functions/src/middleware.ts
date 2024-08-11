@@ -1,58 +1,51 @@
 import { Request, Response } from "express";
 import * as functions from 'firebase-functions';
 import { validate, parse } from '@tma.js/init-data-node';
-import { InitData, InitDataParsed } from '@tma.js/sdk';
+import { InitData } from '@tma.js/sdk';
+import { TonStoryUser, TelegramBotUser } from './types/index';
 
-/**
- * Sets the init data in the response locals.
- * @param res - The response object.
- * @param initData - The init data to set.
- */
-function setInitData(res: Response, initData: InitData): void {
-  res.locals.initData = initData;
+function mapUserToInitData(user: TonStoryUser | TelegramBotUser): Partial<InitData> {
+  return {
+    // map fields from your user interfaces to InitData structure
+    authDate: new Date(),
+    hash: 'someHash',
+    queryId: undefined,
+    user: {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      languageCode: user.languageCode,
+    },
+  };
 }
 
-/**
- * Middleware to authenticate requests based on the Telegram init data.
- * @param request - The incoming request object.
- * @param response - The outgoing response object.
- * @param next - The next middleware function.
- */
 export const auth = async (request: Request, response: Response, next: Function) => {
   try {
     console.log("Request to: ", request.url);
     console.log('Running auth middleware');
 
-    // Bypass the middleware for Telegram bot updates
     if (request.url === '/telegram-bot-update') {
       return next();
     }
 
-    // Extract the authorization header
     const [authType, authData = ''] = (request.header('authorization') || '').split(' ');
 
     switch (authType) {
       case 'tma':
         try {
-          // Validate the init data using the Telegram bot key from Firebase functions config
           validate(authData, functions.config().tgbot.key, {
-            expiresIn: 3600, // Token expiration time in seconds
+            expiresIn: 3600,
           });
 
-          // Parse the auth data
           const parsedInitData = parse(authData);
 
-          // Create the InitData object with required properties
-          const initData: InitData = {
-            authDate: parsedInitData.authDate,
-            hash: parsedInitData.hash,
-            queryId: parsedInitData.queryId, // Example of another field
-            // Ensure the correct type for canSendAfterDate
+          const initData: Partial<InitData> = {
+            ...mapUserToInitData(parsedInitData.user as any),
             canSendAfterDate: parsedInitData.canSendAfter ? new Date(parsedInitData.canSendAfter * 1000) : undefined,
           };
 
-          // Set the init data in the response locals for further use
-          setInitData(response, initData);
+          setInitData(response, initData as InitData);
           console.log('Successfully verified token');
           return next();
         } catch (e) {
