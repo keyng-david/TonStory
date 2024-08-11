@@ -35,10 +35,14 @@ export const telegramBotUpdate = async (req: Request, res: Response) => {
           userData = userDoc.data();
         }
 
-        if (message.text === "/start") {
-          await bot.telegram.sendMessage(userId, `Welcome, ${userData.firstName}!`);
+        if (userData) {
+          if (message.text === "/start") {
+            await bot.telegram.sendMessage(userId, `Welcome, ${userData.firstName}!`);
+          } else {
+            await bot.telegram.sendMessage(userId, "Sorry, I didn't understand that.");
+          }
         } else {
-          await bot.telegram.sendMessage(userId, "Sorry, I didn't understand that.");
+          console.error("User data is undefined");
         }
       });
     }
