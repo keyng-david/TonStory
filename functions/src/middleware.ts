@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import * as functions from "firebase-functions";
-import { validate, parse, type InitData } from "@tma.js/init-data-node";
+import { validate, parse } from "@tma.js/init-data-node";
+import type { InitData } from "@tma.js/sdk";
 
 /**
  * Sets the init data in the response locals.
