@@ -1,26 +1,13 @@
 import { Request, Response } from "express";
 import * as functions from 'firebase-functions';
 import { validate, parse } from '@tma.js/init-data-node';
-import { InitData } from '@tma.js/sdk';
 import { TonStoryUser, TelegramBotUser } from './types/index';
 
-function mapUserToInitData(user: TonStoryUser | TelegramBotUser): Partial<InitData> {
-  return {
-    // map fields from your user interfaces to InitData structure
-    authDate: new Date(),
-    hash: 'someHash',
-    queryId: undefined,
-    user: {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      username: user.username,
-      languageCode: user.languageCode,
-    },
-  };
+function setInitData(res: Response, initData: Partial<TonStoryUser | TelegramBotUser>): void {
+  res.locals.initData = initData;
 }
 
-export const auth = async (request: Request, response: Response, next: Function) => {
+export const auth = async (request: Request, response: Response, next: any) => {
   try {
     console.log("Request to: ", request.url);
     console.log('Running auth middleware');
@@ -37,15 +24,32 @@ export const auth = async (request: Request, response: Response, next: Function)
           validate(authData, functions.config().tgbot.key, {
             expiresIn: 3600,
           });
+          const parsedData = parse(authData);
+          
+          // Type checking and property mapping
+          let initData: Partial<TonStoryUser | TelegramBotUser> = {};
 
-          const parsedInitData = parse(authData);
+          if ('firstName' in parsedData) {
+            // Assuming parsedData is TonStoryUser
+            initData = {
+              id: parsedData.id,
+              firstName: parsedData.firstName,
+              lastName: parsedData.lastName,
+              username: parsedData.username,
+              languageCode: parsedData.languageCode,
+            };
+          } else if ('first_name' in parsedData) {
+            // Assuming parsedData is TelegramBotUser
+            initData = {
+              id: parsedData.id,
+              firstName: parsedData.first_name,
+              lastName: parsedData.last_name,
+              username: parsedData.username,
+              languageCode: parsedData.language_code,
+            };
+          }
 
-          const initData: Partial<InitData> = {
-            ...mapUserToInitData(parsedInitData.user as any),
-            canSendAfterDate: parsedInitData.canSendAfter ? new Date(parsedInitData.canSendAfter * 1000) : undefined,
-          };
-
-          setInitData(response, initData as InitData);
+          setInitData(response, initData);
           console.log('Successfully verified token');
           return next();
         } catch (e) {
@@ -54,7 +58,7 @@ export const auth = async (request: Request, response: Response, next: Function)
       default:
         return next(new Error('Unauthorized'));
     }
-  } catch (error) {
+  } catch {
     return response.status(401).json({
       error: new Error('Invalid request!'),
     });
