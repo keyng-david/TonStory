@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import * as functions from "firebase-functions";
-import { validate, parse, type InitDataParsed } from "@tma.js/init-data-node";
-import type { InitData } from "@tma.js/sdk";
+import * as functions from 'firebase-functions';
+import { validate, parse, type InitData, type InitDataParsed } from '@tma.js/init-data-node';
 
 /**
  * Sets the init data in the response locals.
@@ -12,41 +11,56 @@ function setInitData(res: Response, initData: InitData): void {
   res.locals.initData = initData;
 }
 
-export const auth = async (
-  request: Request,
-  response: Response,
-  next: Function // Change 'any' to 'Function'
-) => {
+/**
+ * Middleware to authenticate requests based on the Telegram init data.
+ * @param request - The incoming request object.
+ * @param response - The outgoing response object.
+ * @param next - The next middleware function.
+ */
+export const auth = async (request: Request, response: Response, next: Function) => {
   try {
     console.log("Request to: ", request.url);
-    console.log("Running auth middleware");
+    console.log('Running auth middleware');
 
-    if (request.url === "/telegram-bot-update") {
+    // Bypass the middleware for Telegram bot updates
+    if (request.url === '/telegram-bot-update') {
       return next();
     }
 
-    const [authType, authData = ""] = (
-      request.header("authorization") || ""
-    ).split(" ");
+    // Extract the authorization header
+    const [authType, authData = ''] = (request.header('authorization') || '').split(' ');
 
     switch (authType) {
-      case "tma":
+      case 'tma':
         try {
+          // Validate the init data using the Telegram bot key from Firebase functions config
           validate(authData, functions.config().tgbot.key, {
-            expiresIn: 3600,
+            expiresIn: 3600, // Token expiration time in seconds
           });
-          setInitData(response, parse(authData));
-          console.log("Successfully verified token");
+
+          // Parse the init data and cast it to InitData type
+          const parsedInitData: InitDataParsed = parse(authData);
+          const initData: InitData = {
+            initData: parsedInitData.initData,
+            canSendAfter: parsedInitData.canSendAfter,
+            authDate: parsedInitData.authDate,
+            hash: parsedInitData.hash,
+            ...parsedInitData, // Include other properties from InitDataParsed
+          };
+
+          // Set the init data in the response locals for further use
+          setInitData(response, initData);
+          console.log('Successfully verified token');
           return next();
         } catch (e) {
           return next(e);
         }
       default:
-        return next(new Error("Unauthorized"));
+        return next(new Error('Unauthorized'));
     }
-  } catch {
+  } catch (error) {
     return response.status(401).json({
-      error: new Error("Invalid request!"),
+      error: new Error('Invalid request!'),
     });
   }
 };
