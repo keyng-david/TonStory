@@ -1,37 +1,19 @@
-import * as admin from "firebase-admin";
-const serviceAccount = require("../credentials/service-account.json");
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+/**
+ * Import function triggers from their respective submodules:
+ *
+ * import {onCall} from "firebase-functions/v2/https";
+ * import {onDocumentWritten} from "firebase-functions/v2/firestore";
+ *
+ * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ */
 
-import { updateLevel, updatePoints } from "./player";
-import { getScoreboard } from "./scoreboard";
-import * as functions from "firebase-functions";
-import { Request, Response } from "express";
-import { auth } from "./middleware";
-import { loadUserData } from "./users";
-import { telegramBotUpdate } from "./telegram";
+import {onRequest} from "firebase-functions/v2/https";
+import * as logger from "firebase-functions/logger";
 
-const express = require("express");
-const app = express();
+// Start writing functions
+// https://firebase.google.com/docs/functions/typescript
 
-// Update in production
-const cors = require("cors")({ origin: true });
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cors);
-
-// Define routes
-app.get("/user-data", [auth], loadUserData);
-app.post("/update-points", [auth], updatePoints);
-app.post("/update-level", [auth], updateLevel);
-app.get("/scoreboard", [auth], getScoreboard);
-app.get("/test", (req: Request, res: Response) => res.send("OK"));
-
-app.post("/telegram-bot-update", [auth], telegramBotUpdate);
-
-export const api = functions
-  .runWith({
-    memory: "512MB",
-  })
-  .https.onRequest(app);
+// export const helloWorld = onRequest((request, response) => {
+//   logger.info("Hello logs!", {structuredData: true});
+//   response.send("Hello from Firebase!");
+// });

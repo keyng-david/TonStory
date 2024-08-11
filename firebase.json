@@ -11,10 +11,11 @@
         "node_modules",
         ".git",
         "firebase-debug.log",
-        "firebase-debug.*.log"
+        "firebase-debug.*.log",
+        "*.local"
       ],
       "predeploy": [
-  "tsc --project ./tsconfig.json"
+        "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
   ],
