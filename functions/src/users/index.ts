@@ -46,13 +46,13 @@ export async function getOrCreateTelegramUser(
             }
           );
           const referrerData = referrerDoc.data();
-          transaction.update(referrerDocRef, {
-            if (referrerData) {
-  referrals: referrerData.referrals + 1,
-} else {
-  throw new Error("Referrer data is undefined");
-}
-          });
+          if (referrerData) {
+            transaction.update(referrerDocRef, {
+              referrals: referrerData.referrals + 1,
+            });
+          } else {
+            throw new Error("Referrer data is undefined");
+          }
         }
       }
 
