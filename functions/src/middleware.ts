@@ -1,16 +1,8 @@
 import { Request, Response } from "express";
 import * as functions from 'firebase-functions';
-import { validate, parse } from '@tma.js/init-data-node';
+import { validateAuthData, parseInitData, InitDataParsed } from '@telegram-apps/sdk';
 
-function setParsedData(res: Response, parsedData: any): void {
-  const initData = {
-    id: parsedData.userId,
-    firstName: parsedData.user?.firstName || parsedData.first_name,
-    lastName: parsedData.user?.lastName || parsedData.last_name,
-    username: parsedData.user?.username || parsedData.username,
-    languageCode: parsedData.user?.languageCode || parsedData.language_code,
-    // Add any other properties as needed from parsedData
-  };
+function setInitData(res: Response, initData: InitDataParsed): void {
   res.locals.initData = initData;
 }
 
@@ -28,11 +20,11 @@ export const auth = async (request: Request, response: Response, next: any) => {
     switch (authType) {
       case 'tma':
         try {
-          validate(authData, functions.config().tgbot.key, {
+          const parsedData = parseInitData(authData);
+          validateAuthData(parsedData, functions.config().tgbot.key, {
             expiresIn: 3600,
           });
-          const parsedData = parse(authData);
-          setParsedData(response, parsedData);
+          setInitData(response, parsedData);
           console.log('Successfully verified token');
           return next();
         } catch (e) {
