@@ -7,11 +7,11 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build:watch": "tsc --watch",
-    "serve": "vercel dev",  // Adjusted for Vercel's local development
-    "deploy": "vercel deploy --prod",  // Vercel deployment command
+    "serve": "vercel dev",
+    "deploy": "vercel deploy --prod",
     "preview": "vite preview",
     "deploy:frontend": "yarn build && npx thirdweb@latest upload dist",
-    "start:firestore": "firebase serve --only firestore"  // Add a script to start Firestore emulator
+    "start:firestore": "firebase serve --only firestore"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
@@ -37,7 +37,7 @@
     "typescript": "^4.9.0",
     "vite": "^3",
     "vite-plugin-node-polyfills": "^0.7.0",
-    "vercel": "^28.6.4"  // Added Vercel CLI as a dev dependency
+    "vercel": "^28.6.4"
   },
   "engines": {
     "node": "18"
