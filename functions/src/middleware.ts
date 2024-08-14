@@ -21,9 +21,9 @@ export const auth = async (request: Request, response: Response, next: any) => {
       case 'tma':
         try {
           const parsedData = parseInitData(authData);
-          validateAuthData(parsedData, functions.config().tgbot.key, {
-            expiresIn: 3600,
-          });
+validateAuthData(parsedData, process.env.tgbot, {
+  expiresIn: 3600,
+});
           setInitData(response, parsedData);
           console.log('Successfully verified token');
           return next();
