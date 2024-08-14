@@ -1,21 +1,26 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "module": "ESNext",  // Changed to ESNext for Vercel compatibility
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": false,
     "skipLibCheck": true,
-    "esModuleInterop": true, // Aligned with the functions tsconfig
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": false,
+    "outDir": "lib",
+    "sourceMap": true,
+    "types": ["node"],
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src", "API"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],  // Exclude tests and unnecessary files
+  "compileOnSave": true,
   "references": [{ "path": "./tsconfig.node.json" }]
 }
