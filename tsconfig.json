@@ -20,7 +20,12 @@
     "jsx": "react-jsx"
   },
   "include": ["src", "API"],
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],  // Exclude tests and unnecessary files
+  "exclude": [
+    "node_modules", 
+    "**/*.spec.ts", 
+    "**/*.test.ts",
+    "**/__tests__/**/*" // Added exclusion for any test directories
+  ],
   "compileOnSave": true,
   "references": [{ "path": "./tsconfig.node.json" }]
 }
