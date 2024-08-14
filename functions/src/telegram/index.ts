@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import firestore from "../firestore";
-import * as functions from "firebase-functions";
 import { Telegraf } from 'telegraf';
 import { getOrCreateTelegramUser } from "../users";
 import { formatTonStoryUser } from "../users";
