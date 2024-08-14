@@ -10,7 +10,8 @@
     "serve": "vercel dev",  // Adjusted for Vercel's local development
     "deploy": "vercel deploy --prod",  // Vercel deployment command
     "preview": "vite preview",
-    "deploy:frontend": "yarn build && npx thirdweb@latest upload dist"
+    "deploy:frontend": "yarn build && npx thirdweb@latest upload dist",
+    "start:firestore": "firebase serve --only firestore"  // Add a script to start Firestore emulator
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
