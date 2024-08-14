@@ -6,7 +6,7 @@ import { getOrCreateTelegramUser } from "../users";
 import { formatTonStoryUser } from "../users";
 
 // Retrieve the bot token from Firebase config
-const botToken = functions.config().tgbot.key;
+const botToken = process.env.tgbot;
 
 if (!botToken) {
   throw new Error("Bot token is missing");
