@@ -3,7 +3,7 @@ import { retrieveLaunchParams } from '@tma.js/sdk';
 const { initDataRaw } = retrieveLaunchParams();
 
 //update for production
-const API_BASE_URL = 'https://0558-144-48-39-25.ngrok-free.app/tonstory/us-central1/api';
+const API_BASE_URL = process.env.base;
 
 const headers = {
   Authorization: `tma ${initDataRaw}`
