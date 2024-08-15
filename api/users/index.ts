@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import firestore from "../firestore.ts";
-import { TelegramBotUser, TelegramMiniAppUser, TonStoryUser } from "../types/index.ts";
+import { TelegramBotUser, TelegramMiniAppUser, TonStoryUser } from "../types/index.js";
 
 export const loadUserData = async (req, res) => {
   console.log("Updating points...");
