@@ -1,8 +1,6 @@
-import { Request, Response } from "express";
-import { Telegraf } from 'telegraf';
-import { getOrCreateTelegramUser } from "../users";
-import { formatTonStoryUser } from "../users";
-
+const { Request, Response } = require("express");
+const { Telegraf } = require('telegraf');
+const { getOrCreateTelegramUser, formatTonStoryUser } = require("../users");
 const firestore = require("../firestore");
 
 // Retrieve the bot token from Firebase config
