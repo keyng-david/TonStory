@@ -20,6 +20,8 @@ if (!admin.apps.length) {
     });
 }
 
+console.log(credentials);
+
 // Access Firestore from the initialized admin instance
 const firestore = admin.firestore();
 
