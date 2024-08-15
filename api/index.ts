@@ -3,7 +3,7 @@
 // const logger = require("firebase-functions/logger");
 
 // Vercel-compatible serverless function
-module.exports = (req, res) => {
+export default (req, res) => {
   console.log("Hello logs!"); // Using standard console.log for logging
   res.status(200).send("Hello from Vercel serverless function!");
 };
