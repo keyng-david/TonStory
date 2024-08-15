@@ -12,7 +12,7 @@ if (!botToken) {
 
 const bot = new Telegraf(botToken);
 
-export const telegramBotUpdate = async (req, res) => {
+const telegramBotUpdate = async (req, res) => {
   try {
     console.log("Handling Telegram bot update...");
     const update = req.body;
@@ -52,4 +52,4 @@ export const telegramBotUpdate = async (req, res) => {
   }
 };
 
-// Ensure there's a newline at the end of the file
+export default telegramBotUpdate;
