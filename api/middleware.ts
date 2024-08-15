@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import * as functions from 'firebase-functions';
 import { validateAuthData, parseInitData, InitDataParsed } from '@telegram-apps/sdk';
 
 function setInitData(res: Response, initData: InitDataParsed): void {
