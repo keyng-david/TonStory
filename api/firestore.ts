@@ -1,4 +1,5 @@
-const admin = require('firebase-admin');
+import admin from 'firebase-admin';
+
 
 // Check if Firebase app is already initialized to avoid re-initialization errors
 if (!admin.apps.length) {
@@ -26,4 +27,4 @@ const firestore = admin.firestore();
 // Optional: Set Firestore settings, if necessary
 firestore.settings({ ignoreUndefinedProperties: true });
 
-module.exports = firestore;
+export default firestore;
