@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
-import firestore from "../firestore";
+const { Request, Response } = require("express");
+const firestore = require("../firestore");
+
 
 export const getScoreboard = async (req: Request, res: Response) => {
   try {
