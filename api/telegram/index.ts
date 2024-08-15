@@ -12,7 +12,7 @@ if (!botToken) {
 
 const bot = new Telegraf(botToken);
 
-const telegramBotUpdate = async (req, res) => {
+const telegramBotUpdate = async (req: Request, res: Response) => {
   try {
     console.log("Handling Telegram bot update...");
     const update = req.body;
@@ -22,27 +22,29 @@ const telegramBotUpdate = async (req, res) => {
       const userId = message.from.id;
       const userRef = firestore.collection("users").doc(userId.toString());
 
-      await firestore.runTransaction(async (transaction) => {
-        const userDoc = await transaction.get(userRef);
-        let userData;
+      // Fetch user data outside the transaction
+      const userDoc = await userRef.get();
+      let userData = userDoc.data();
 
-        if (!userDoc.exists) {
-          const formattedUser = formatTonStoryUser(message.from);
-          userData = await getOrCreateTelegramUser(formattedUser);
-        } else {
-          userData = userDoc.data();
-        }
+      // Create user if not exists
+      if (!userData) {
+        const formattedUser = formatTonStoryUser(message.from);
+        userData = await getOrCreateTelegramUser(formattedUser);
 
-        if (userData) {
-          if (message.text === "/start") {
-            await bot.telegram.sendMessage(userId, `Welcome, ${userData.firstName}!`);
-          } else {
-            await bot.telegram.sendMessage(userId, "Sorry, I didn't understand that.");
-          }
-        } else {
-          console.error("User data is undefined");
-        }
-      });
+        // Save new user data
+        await userRef.set(userData);
+      }
+
+      // Send message outside the Firestore transaction
+      if (userData) {
+        const text = message.text === "/start"
+          ? `Welcome, ${userData.firstName}!`
+          : "Sorry, I didn't understand that.";
+
+        await bot.telegram.sendMessage(userId, text);
+      } else {
+        console.error("User data is undefined");
+      }
     }
 
     res.status(200).send("Update handled");
