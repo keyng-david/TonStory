@@ -1,7 +1,6 @@
 const { Request, Response } = require("express");
 const firestore = require("../firestore");
 
-
 export const updatePoints = async (req: Request, res: Response) => {
   console.log("Updating points...");
   const { user } = res.locals.initData;
