@@ -1,5 +1,5 @@
-const { Request, Response } = require("express");
-const firestore = require("../firestore");
+import { Request, Response } from "express";
+import firestore from "../firestore.js";
 
 export const updatePoints = async (req: Request, res: Response) => {
   console.log("Updating points...");
