@@ -2,6 +2,7 @@
   "name": "tonstory",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "main": "lib/index.js",
   "scripts": {
     "dev": "vite",
