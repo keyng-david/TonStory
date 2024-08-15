@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import firestore from "../firestore.js";
+import firestore from "../firestore.ts";
 
 export const updatePoints = async (req: Request, res: Response) => {
   console.log("Updating points...");
