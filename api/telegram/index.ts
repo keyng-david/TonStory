@@ -1,7 +1,7 @@
-const { Request, Response } = require("express");
-const { Telegraf } = require('telegraf');
-const { getOrCreateTelegramUser, formatTonStoryUser } = require("../users");
-const firestore = require("../firestore");
+import { Request, Response } from "express";
+import { Telegraf } from 'telegraf';
+import { getOrCreateTelegramUser, formatTonStoryUser } from "../users.js";
+import firestore from "../firestore.js";
 
 // Retrieve the bot token from Firebase config
 const botToken = process.env.tgbot;
@@ -12,7 +12,7 @@ if (!botToken) {
 
 const bot = new Telegraf(botToken);
 
-export const telegramBotUpdate = async (req: Request, res: Response) => {
+export const telegramBotUpdate = async (req, res) => {
   try {
     console.log("Handling Telegram bot update...");
     const update = req.body;
