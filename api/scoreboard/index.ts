@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import firestore from "../firestore.ts";
+import firestore from "../firestore.js";
 
 
 export const getScoreboard = async (req: Request, res: Response) => {
