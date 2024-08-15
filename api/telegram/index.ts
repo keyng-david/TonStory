@@ -35,15 +35,21 @@ const telegramBotUpdate = async (req: Request, res: Response) => {
         await userRef.set(userData);
       }
 
-      // Send message outside the Firestore transaction
-      if (userData) {
-        const text = message.text === "/start"
-          ? `Welcome, ${userData.firstName}!`
-          : "Sorry, I didn't understand that.";
+      // Check for the "/start" command
+      if (message.text === "/start") {
+        const gameUrl = "https://ton-story.vercel.app/";  // Replace with your actual frontend URL
 
-        await bot.telegram.sendMessage(userId, text);
+        // Send a message with an inline button to start the game
+        await bot.telegram.sendMessage(userId, `Welcome, ${userData.firstName}!\n\nClick the button below to start the game:`, {
+          reply_markup: {
+            inline_keyboard: [
+              [{ text: "Launch", url: gameUrl }]
+            ]
+          }
+        });
       } else {
-        console.error("User data is undefined");
+        // Send a generic response if the message is not "/start"
+        await bot.telegram.sendMessage(userId, "Sorry, I didn't understand that.");
       }
     }
 
