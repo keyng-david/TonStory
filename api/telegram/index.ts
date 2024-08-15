@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Telegraf } from 'telegraf';
-import { getOrCreateTelegramUser, formatTonStoryUser } from "../users/index.ts";
+import { getOrCreateTelegramUser, formatTonStoryUser } from "../users/index.js";
 import firestore from "../firestore.ts";
 
 // Retrieve the bot token from Firebase config
