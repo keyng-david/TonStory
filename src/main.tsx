@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
 import App from "./App";
@@ -9,10 +9,10 @@ import { StateProvider } from "./utils/store";
 eruda.init();
 
 interface CustomDisplayGateProps {
-  children: React.ReactNode;
-  loading: React.ReactNode;
-  error: (error: unknown) => React.ReactNode;
-  initial: React.ReactNode;
+  children: ReactNode;
+  loading: ReactNode;
+  error: (error: unknown) => ReactNode;
+  initial: ReactNode;
 }
 
 function CustomDisplayGate({ children, loading, error, initial }: CustomDisplayGateProps) {
@@ -37,7 +37,7 @@ function CustomDisplayGate({ children, loading, error, initial }: CustomDisplayG
   return <>{children}</>;
 }
 
-function SDKProviderError({ error }: { error: unknown }) {
+function SDKProviderError({ error }: { error: unknown }): ReactNode {
   return (
     <div>
       Oops. Something went wrong.
@@ -48,11 +48,11 @@ function SDKProviderError({ error }: { error: unknown }) {
   );
 }
 
-function SDKProviderLoading() {
+function SDKProviderLoading(): ReactNode {
   return <div>SDK is loading.</div>;
 }
 
-function SDKInitialState() {
+function SDKInitialState(): ReactNode {
   return <div>Waiting for initialization to start.</div>;
 }
 
