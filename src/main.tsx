@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
 import App from "./App";
-import { SDKProvider, useMiniApp, type SDKInitOptions } from '@tma.js/sdk-react';
+import { SDKProvider, useMiniApp } from '@tma.js/sdk-react';
 import eruda from 'eruda';
 import { StateProvider } from "./utils/store";
 
@@ -22,14 +22,13 @@ function CustomDisplayGate({ children, loading, error, initial }: CustomDisplayG
 
   useEffect(() => {
     setStatus("loading");
-    miniApp.ready()
-      .then(() => {
-        setStatus("ready");
-      })
-      .catch((err) => {
-        setErrorMessage(err);
-        setStatus("error");
-      });
+    try {
+      miniApp.ready();
+      setStatus("ready");
+    } catch (err) {
+      setErrorMessage(err);
+      setStatus("error");
+    }
   }, [miniApp]);
 
   if (status === "initial") return <>{initial}</>;
@@ -60,7 +59,7 @@ function SDKInitialState() {
 const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
-  <SDKProvider options={{ async: false }}>
+  <SDKProvider>
     <CustomDisplayGate
       error={SDKProviderError}
       loading={SDKProviderLoading}
