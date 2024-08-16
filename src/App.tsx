@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import {Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 import Game from "./pages.tsx/Game";
 import Shop from "./pages.tsx/Shop";
@@ -14,14 +14,18 @@ export default function App() {
   const { dispatch } = useContext(store);
 
   useEffect(() => {
+    console.log('App is rendering...');
     loadUser();
   }, []);
 
   async function loadUser() {
     try {
+      console.log('Loading user data...');
       const { data } = await loadUserData();
+      console.log('User data loaded:', data);
       dispatch({ type: 'SET_USER', payload: data });
       miniApp.ready();
+      console.log('MiniApp is ready');
     } 
     catch (error) {
       console.error("Error loading user data", error);
