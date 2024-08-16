@@ -1,31 +1,76 @@
-// Moving debugMessage to global context or StateProvider for consistency
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
-import { SDKProvider } from '@tma.js/sdk-react';
+import App from "./App";
+import { SDKProvider, useMiniApp, type SDKInitOptions } from '@tma.js/sdk-react';
+import eruda from 'eruda';
 import { StateProvider } from "./utils/store";
-import App from "./App/"
 
+eruda.init();
+
+interface CustomDisplayGateProps {
+  children: React.ReactNode;
+  loading: React.ReactNode;
+  error: (error: unknown) => React.ReactNode;
+  initial: React.ReactNode;
+}
+
+function CustomDisplayGate({ children, loading, error, initial }: CustomDisplayGateProps) {
+  const [status, setStatus] = useState<"initial" | "loading" | "ready" | "error">("initial");
+  const [errorMessage, setErrorMessage] = useState<unknown>(null);
+  const miniApp = useMiniApp();
+
+  useEffect(() => {
+    setStatus("loading");
+    miniApp.ready()
+      .then(() => {
+        setStatus("ready");
+      })
+      .catch((err) => {
+        setErrorMessage(err);
+        setStatus("error");
+      });
+  }, [miniApp]);
+
+  if (status === "initial") return <>{initial}</>;
+  if (status === "loading") return <>{loading}</>;
+  if (status === "error") return <>{error(errorMessage)}</>;
+  return <>{children}</>;
+}
+
+function SDKProviderError({ error }: { error: unknown }) {
+  return (
+    <div>
+      Oops. Something went wrong.
+      <blockquote>
+        <code>{error instanceof Error ? error.message : JSON.stringify(error)}</code>
+      </blockquote>
+    </div>
+  );
+}
+
+function SDKProviderLoading() {
+  return <div>SDK is loading.</div>;
+}
+
+function SDKInitialState() {
+  return <div>Waiting for initialization to start.</div>;
+}
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
-
-function DebugMessageDisplay() {
-  const { debugMessage } = useGlobalState();
-  return <div style={{ color: 'red', fontWeight: 'bold', position: 'fixed', top: 0, left: 0 }}>{debugMessage}</div>;
-}
-
 root.render(
-  <div>
-    <DebugMessageDisplay />
-    <SDKProvider>
+  <SDKProvider options={{ async: false }}>
+    <CustomDisplayGate
+      error={SDKProviderError}
+      loading={SDKProviderLoading}
+      initial={SDKInitialState}
+    >
       <StateProvider>
         <BrowserRouter>
-          <Suspense fallback={<div>Loading...</div>}>
-            <App />
-          </Suspense>
+          <App />
         </BrowserRouter>
       </StateProvider>
-    </SDKProvider>
-  </div>
+    </CustomDisplayGate>
+  </SDKProvider>
 );
