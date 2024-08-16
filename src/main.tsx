@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
 import { SDKProvider } from '@tma.js/sdk-react';
@@ -13,11 +13,17 @@ if (process.env.NODE_ENV !== 'production') {
 // Lazy load the App component to optimize initial load time
 const App = React.lazy(() => import("./App"));
 
+// Debugging: Log SDK options and lifecycle events
+useEffect(() => {
+  console.log('App is loading...');
+}, []);
+
 interface SDKProviderErrorProps {
   error: unknown;
 }
 
 function SDKProviderError({ error }: SDKProviderErrorProps) {
+  console.error('SDK Error:', error);
   return (
     <div>
       Oops. Something went wrong.
@@ -33,6 +39,7 @@ function SDKProviderError({ error }: SDKProviderErrorProps) {
 }
 
 function SDKProviderLoading() {
+  console.log('SDK is loading...');
   return <div>SDK is loading...</div>;
 }
 
