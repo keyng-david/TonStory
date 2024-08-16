@@ -4,6 +4,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
 import { SDKProvider } from '@tma.js/sdk-react';
 import { StateProvider } from "./utils/store";
+import App from "./App/"
+
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
