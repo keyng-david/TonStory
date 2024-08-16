@@ -17,7 +17,7 @@ export const Fullscreen = styled.div`
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  background-color: black;
+  background-color: red;
 `;
 
 export const Card = styled.div`
