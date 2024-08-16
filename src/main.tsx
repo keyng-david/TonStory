@@ -1,9 +1,9 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom'
 import App from "./App";
-import { SDKProvider, useMiniApp } from '@tma.js/sdk-react';
-import eruda from 'eruda';
+import { SDKProvider, DisplayGate, type SDKInitOptions } from '@tma.js/sdk-react';
+import eruda from 'eruda'
 import { StateProvider } from "./utils/store";
 
 eruda.init();
@@ -35,29 +35,20 @@ function SDKInitialState() {
   return <div>Waiting for initialization to start.</div>;
 }
 
-function AppWrapper() {
-  const miniApp = useMiniApp();
-
-  // Log launch parameters for debugging
-  console.log("Launch parameters: ", miniApp);
-
-  if (!miniApp) {
-    return <SDKProviderError error={new Error("Launch parameters missing")} />;
-  }
-
-  return (
-    <StateProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </StateProvider>
-  );
-}
-
 const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
-  <SDKProvider>
-    <AppWrapper />
+  <SDKProvider options={{ async: false }}>
+    <DisplayGate
+      error={SDKProviderError}
+      loading={SDKProviderLoading}
+      initial={SDKInitialState}
+    >
+      <StateProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </StateProvider>
+    </DisplayGate>
   </SDKProvider>
 );
