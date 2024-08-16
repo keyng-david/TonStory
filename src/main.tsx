@@ -3,7 +3,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
 import { SDKProvider } from '@tma.js/sdk-react';
-import { StateProvider, useGlobalState } from "./utils/store";
+import { StateProvider } from "./utils/store";
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
