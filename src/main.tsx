@@ -1,75 +1,49 @@
-import React, { useState, useEffect, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
 import App from "./App";
-import { SDKProvider, useMiniApp } from '@tma.js/sdk-react';
+import { SDKProvider } from '@tma.js/sdk-react';
 import eruda from 'eruda';
 import { StateProvider } from "./utils/store";
 
 eruda.init();
 
-interface CustomDisplayGateProps {
-  children: ReactNode;
-  loading: ReactNode;
-  error: (error: unknown) => ReactNode;
-  initial: ReactNode;
+// Adjust the error and loading components to ensure correct typing
+interface SDKProviderErrorProps {
+  error: unknown;
 }
 
-function CustomDisplayGate({ children, loading, error, initial }: CustomDisplayGateProps) {
-  const [status, setStatus] = useState<"initial" | "loading" | "ready" | "error">("initial");
-  const [errorMessage, setErrorMessage] = useState<unknown>(null);
-  const miniApp = useMiniApp();
-
-  useEffect(() => {
-    setStatus("loading");
-    try {
-      miniApp.ready();
-      setStatus("ready");
-    } catch (err) {
-      setErrorMessage(err);
-      setStatus("error");
-    }
-  }, [miniApp]);
-
-  if (status === "initial") return <>{initial}</>;
-  if (status === "loading") return <>{loading}</>;
-  if (status === "error") return <>{error(errorMessage)}</>;
-  return <>{children}</>;
-}
-
-function SDKProviderError({ error }: { error: unknown }): ReactNode {
+function SDKProviderError({ error }: SDKProviderErrorProps): ReactNode {
   return (
     <div>
       Oops. Something went wrong.
       <blockquote>
-        <code>{error instanceof Error ? error.message : JSON.stringify(error)}</code>
+        <code>
+          {error instanceof Error ? error.message : JSON.stringify(error)}
+        </code>
       </blockquote>
     </div>
   );
 }
 
 function SDKProviderLoading(): ReactNode {
-  return <div>SDK is loading.</div>;
+  return <div>SDK is loading...</div>;
 }
 
 function SDKInitialState(): ReactNode {
-  return <div>Waiting for initialization to start.</div>;
+  return <div>Waiting for initialization to start...</div>;
 }
 
+// Create the root element for React
 const container = document.getElementById("root");
 const root = createRoot(container!);
+
 root.render(
   <SDKProvider>
-    <CustomDisplayGate
-      error={SDKProviderError}
-      loading={SDKProviderLoading}
-      initial={SDKInitialState}
-    >
-      <StateProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </StateProvider>
-    </CustomDisplayGate>
+    <StateProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </StateProvider>
   </SDKProvider>
 );
