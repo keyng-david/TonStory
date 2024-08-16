@@ -1,8 +1,10 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from 'react-router-dom';
 import { SDKProvider } from '@tma.js/sdk-react';
 import { StateProvider } from "./utils/store";
+
+const [debugMessage, setDebugMessage] = useState("Initializing...");
 
 // Conditionally import and initialize Eruda for non-production environments
 if (process.env.NODE_ENV !== 'production') {
@@ -15,7 +17,7 @@ const App = React.lazy(() => import("./App"));
 
 // Debugging: Log SDK options and lifecycle events
 useEffect(() => {
-  console.log('App is loading...');
+  setDebugMessage("App is loading...");
 }, []);
 
 interface SDKProviderErrorProps {
@@ -24,6 +26,7 @@ interface SDKProviderErrorProps {
 
 function SDKProviderError({ error }: SDKProviderErrorProps) {
   console.error('SDK Error:', error);
+  setDebugMessage(`SDK Error: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
   return (
     <div>
       Oops. Something went wrong.
@@ -40,6 +43,7 @@ function SDKProviderError({ error }: SDKProviderErrorProps) {
 
 function SDKProviderLoading() {
   console.log('SDK is loading...');
+  setDebugMessage("SDK is loading...");
   return <div>SDK is loading...</div>;
 }
 
@@ -47,13 +51,16 @@ const container = document.getElementById("root");
 const root = createRoot(container!);
 
 root.render(
-  <SDKProvider>
-    <StateProvider>
-      <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
-          <App />
-        </Suspense>
-      </BrowserRouter>
-    </StateProvider>
-  </SDKProvider>
+  <div>
+    <div>{debugMessage}</div>
+    <SDKProvider>
+      <StateProvider>
+        <BrowserRouter>
+          <Suspense fallback={<div>Loading...</div>}>
+            <App />
+          </Suspense>
+        </BrowserRouter>
+      </StateProvider>
+    </SDKProvider>
+  </div>
 );
