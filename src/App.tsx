@@ -10,37 +10,42 @@ import Scoreboard from "./pages.tsx/Scoreboard";
 import { store } from "./utils/store";
 
 export default function App() {
-  const [debugMessage, setDebugMessage] = useState("App initializing...");
+  const [localDebugMessage, setLocalDebugMessage] = useState("App initializing...");
   const miniApp = useMiniApp();
-  const { dispatch } = useContext(store);
+  const { dispatch, setGlobalDebugMessage } = useContext(store);
 
   useEffect(() => {
     console.log('App is rendering...');
-    setDebugMessage("App is rendering...");
+    setLocalDebugMessage("App is rendering...");
+    setGlobalDebugMessage("App is rendering...");
     loadUser();
   }, []);
 
   async function loadUser() {
     try {
       console.log('Loading user data...');
-      setDebugMessage("Loading user data...");
+      setLocalDebugMessage("Loading user data...");
+      setGlobalDebugMessage("Loading user data...");
       const { data } = await loadUserData();
       console.log('User data loaded:', data);
-      setDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
+      setLocalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
+      setGlobalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
       dispatch({ type: 'SET_USER', payload: data });
       miniApp.ready();
       console.log('MiniApp is ready');
-      setDebugMessage("MiniApp is ready");
+      setLocalDebugMessage("MiniApp is ready");
+      setGlobalDebugMessage("MiniApp is ready");
     } 
     catch (error) {
       console.error("Error loading user data", error);
-      setDebugMessage(`Error loading user data: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
+      const errorMessage = `Error loading user data: ${error instanceof Error ? error.message : JSON.stringify(error)}`;
+      setLocalDebugMessage(errorMessage);
+      setGlobalDebugMessage(errorMessage);
     } 
   }
 
   return (
     <div>
-      <div>{debugMessage}</div>
       <Routes>
         <Route path="/" element={<Game />} />
         <Route path="/scoreboard" element={<Scoreboard />} />
