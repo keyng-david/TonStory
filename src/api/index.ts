@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { retrieveLaunchParams } from '@tma.js/sdk';
 
-export default function App() {
-  const [username, setUsername] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+const { initDataRaw } = retrieveLaunchParams();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Making the API call to your backend
-        const response = await axios.get('/api/user');
-        const userData = response.data.data;  // Accessing user data from the response
+const headers = {
+  Authorization: `tma ${initDataRaw}`
+};
 
-        if (userData && userData.username) {
-          setUsername(userData.username);
-        } else {
-          setUsername('Unknown User');
-        }
-      } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError('Failed to load user data');
-      }
-    };
+// Load user data from the user function
+export const loadUserData = async () => {
+  try {
+    const response = await axios.get(`/api/user-data`, { headers });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
 
-    fetchUserData();
-  }, []);
+// Fetch scoreboard data from the scoreboard function
+export const getScoreboard = async () => {
+  try {
+    const response = await axios.get(`/api/scoreboard`, { headers });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching scoreboard:", error);
+    throw error;
+  }
+};
 
-  return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>Ton Story</h1>
-      {error ? (
-        <p>{error}</p>
-      ) : username ? (
-        <p>Welcome, {username}! If you see this message, React is working correctly.</p>
-      ) : (
-        <p>Loading user data...</p>
-      )}
-    </div>
-  );
-}
+// Update points using the update-points function
+export const updatePoints = async () => {
+  try {
+    const response = await axios.post(`/api/update-points`, {}, { headers });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating points:", error);
+    throw error;
+  }
+};
