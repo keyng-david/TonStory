@@ -1,78 +1,43 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import { loadUserData } from './api'; // Adjust the import path as necessary
-import miniApp from '@tma.js/sdk'; // Adjust the import path as necessary
+import React, { useEffect, useState } from 'react';
+import { loadUserData } from "./api";
 
-// Define initial state and reducer
-const initialState = {
-  user: null,
-  loading: true,
-  error: null,
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case 'SET_USER':
-      return { ...state, user: action.payload, loading: false };
-    case 'SET_ERROR':
-      return { ...state, error: action.payload, loading: false };
-    default:
-      return state;
-  }
-}
-
-const App = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [localDebugMessage, setLocalDebugMessage] = useState('');
-  const [globalDebugMessage, setGlobalDebugMessage] = useState('');
+export default function App() {
+  const [localDebugMessage, setLocalDebugMessage] = useState("App initializing...");
+  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     console.log('App is rendering...');
     setLocalDebugMessage("App is rendering...");
-    setGlobalDebugMessage("App is rendering...");
     loadUser();
   }, []);
 
-  const loadUser = async () => {
+  async function loadUser() {
     try {
       console.log('Loading user data...');
       setLocalDebugMessage("Loading user data...");
-      setGlobalDebugMessage("Loading user data...");
-      const data = await loadUserData();
+      const { data } = await loadUserData();
       console.log('User data loaded:', data);
       setLocalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
-      setGlobalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
-      dispatch({ type: 'SET_USER', payload: data });
-      miniApp.ready();
-      console.log('MiniApp is ready');
-      setLocalDebugMessage("MiniApp is ready");
-      setGlobalDebugMessage("MiniApp is ready");
-    } 
-    catch (error) {
+      if (data && data.username) {
+        setUsername(data.username);  // Assuming the user data includes a 'username' field
+      }
+    } catch (error) {
       console.error("Error loading user data", error);
       const errorMessage = `Error loading user data: ${error instanceof Error ? error.message : JSON.stringify(error)}`;
       setLocalDebugMessage(errorMessage);
-      setGlobalDebugMessage(errorMessage);
-      dispatch({ type: 'SET_ERROR', payload: error });
     }
-  };
-
-  if (state.loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (state.error) {
-    return <div>Error: {state.error.message || state.error.toString()}</div>;
   }
 
   return (
-    <div>
-      <h1>Welcome, {state.user.name}!</h1>
-      <p>Debug Messages:</p>
+    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+      <h1>Ton Story</h1>
+      <p>If you see this message, React is working correctly.</p>
       <p>{localDebugMessage}</p>
-      <p>{globalDebugMessage}</p>
-      {/* Rest of your app components go here */}
+      {username ? (
+        <p>Welcome, {username}!</p>
+      ) : (
+        <p>Loading user information...</p>
+      )}
     </div>
   );
-};
-
-export default App;
+}
