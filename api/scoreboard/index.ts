@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import firestore from "../firestore.js";
-import { verifyJWT } from "../auth.js";
-
+import { verifyJWTToken } from '../auth.js';
 export const getScoreboard = async (req: Request, res: Response) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
