@@ -1,74 +1,67 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Route, Routes } from 'react-router-dom';
+import Navbar from "./components/Navbar";
+import Game from "./pages.tsx/Game";
+import Shop from "./pages.tsx/Shop";
+import Share from "./pages.tsx/Share";
+import { useMiniApp } from '@tma.js/sdk-react';
+import { loadUserData } from "./api";
+import Scoreboard from "./pages.tsx/Scoreboard";
+import { store } from "./utils/store";
+
+function ErrorBoundary({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      {children}
+    </div>
+  );
+}
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [debugMessage, setDebugMessage] = useState<string>("Initializing App...");
+  const [localDebugMessage, setLocalDebugMessage] = useState("App initializing...");
+  const miniApp = useMiniApp();
+  const { dispatch, setGlobalDebugMessage } = useContext(store);
 
   useEffect(() => {
-    setDebugMessage('App is initializing...');
-    console.log('App is initializing...'); // Initial debug message
-
-    async function loadUser() {
-      setDebugMessage('Inside loadUser function...');
-      console.log('Inside loadUser function...');
-
-      try {
-        setDebugMessage('Loading user data...');
-        console.log('Loading user data...');
-
-        // Mock the API call for testing
-        const data = { username: "testUser", points: 1000 }; // Mock data
-        
-        // Uncomment the actual API call
-        // const { data } = await loadUserData();
-
-        if (!data) {
-          throw new Error("No data received from the API");
-        }
-
-        setDebugMessage('User data loaded successfully.');
-        console.log('User data loaded:', data);
-        setUserData(data);
-      } catch (error: any) {
-        const errorMsg = error.message || "Unknown error occurred";
-        setDebugMessage(`Error: ${errorMsg}`);
-        console.error("Error loading user data:", errorMsg);
-        setError(errorMsg);
-      } finally {
-        setDebugMessage('Finished loading.');
-        setLoading(false);
-      }
-    }
-
+    console.log('App is rendering...');
+    setLocalDebugMessage("App is rendering...");
+    setGlobalDebugMessage("App is rendering...");
     loadUser();
   }, []);
 
-  if (loading) {
-    return (
-      <div>
-        <h2>Loading...</h2>
-        <p>{debugMessage}</p> {/* Display debug message */}
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div>
-        <h2>Error</h2>
-        <p>{debugMessage}</p> {/* Display debug message */}
-        <p>{error}</p> {/* Display actual error message */}
-      </div>
-    );
+  async function loadUser() {
+    try {
+      console.log('Loading user data...');
+      setLocalDebugMessage("Loading user data...");
+      setGlobalDebugMessage("Loading user data...");
+      const { data } = await loadUserData();
+      console.log('User data loaded:', data);
+      setLocalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
+      setGlobalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
+      dispatch({ type: 'SET_USER', payload: data });
+      miniApp.ready();
+      console.log('MiniApp is ready');
+      setLocalDebugMessage("MiniApp is ready");
+      setGlobalDebugMessage("MiniApp is ready");
+    } catch (error) {
+      console.error("Error loading user data", error);
+      const errorMessage = `Error loading user data: ${error instanceof Error ? error.message : JSON.stringify(error)}`;
+      setLocalDebugMessage(errorMessage);
+      setGlobalDebugMessage(errorMessage);
+    }
   }
 
   return (
-    <div>
-      <h1>User Data Loaded Successfully</h1>
-      <pre>{JSON.stringify(userData, null, 2)}</pre>
-      <p>{debugMessage}</p> {/* Display final debug message */}
-    </div>
+    <ErrorBoundary>
+      <div>
+        <Routes>
+          <Route path="/" element={<Game />} />
+          <Route path="/scoreboard" element={<Scoreboard />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/share" element={<Share />} />
+        </Routes>
+        <Navbar />
+      </div>
+    </ErrorBoundary>
   );
 }
