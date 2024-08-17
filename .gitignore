@@ -68,3 +68,5 @@ node_modules/
 
 # Or specifically ignore the service-account.json file
 functions/credentials/service-account.json
+# Sentry Config File
+.env.sentry-build-plugin
