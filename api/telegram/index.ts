@@ -36,21 +36,22 @@ const telegramBotUpdate = async (req: Request, res: Response) => {
       }
 
       // Check for the "/start" command
-      if (message.text === "/start") {
-        const gameUrl = "https://ton-story.vercel.app/";
+      // api/telegram/index.ts
+if (message.text === "/start") {
+  const gameUrl = "https://ton-story.vercel.app/";
 
-        await bot.telegram.sendMessage(
-          userId,
-          `Welcome, ${userData?.firstName || "User"}!\n\nClick the button below to start the game:`,
-          {
-            reply_markup: {
-              inline_keyboard: [[{ text: "Launch", url: gameUrl }]],
-            },
-          }
-        );
-      } else {
-        await bot.telegram.sendMessage(userId, "Sorry, I didn't understand that.");
-      }
+  await bot.telegram.sendMessage(
+    userId,
+    `Welcome, ${userData?.firstName || 'User'}!\n\nClick the button below to start the game:`,
+    {
+      reply_markup: {
+        inline_keyboard: [[{ text: "Launch", url: gameUrl }]],
+      },
+    }
+  );
+} else {
+  await bot.telegram.sendMessage(userId, "Sorry, I didn't understand that.");
+}
     }
 
     res.status(200).send("Update handled");
