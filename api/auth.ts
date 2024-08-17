@@ -1,25 +1,14 @@
 import jwt from 'jsonwebtoken';
 
-const secretKey = process.env.JWT_SECRET || 'your_secret_key'; // Store secret key in environment variables
+const secretKey = process.env.JWT_SECRET || 'your_secret_key';
 
-/**
- * Creates a JWT token.
- * @param {{ id: string; [key: string]: any }} payload - The payload to encode in the JWT.
- * @returns {string} The generated JWT token.
- */
-export const createJWTToken = (payload) => {
-  return jwt.sign(payload, secretKey, { expiresIn: '1h' }); // Token expires in 1 hour
+export const createJWTToken = (payload: { id: string; [key: string]: any }): string => {
+  return jwt.sign(payload, secretKey, { expiresIn: '1h' });
 };
 
-/**
- * Verifies a JWT token.
- * @param {string} token - The JWT token to verify.
- * @returns {{ id: string; [key: string]: any }} The decoded payload.
- * @throws Will throw an error if the token is invalid or expired.
- */
-export const verifyJWTToken = (token) => {
+export const verifyJWTToken = (token: string): { id: string; [key: string]: any } => {
   try {
-    return jwt.verify(token, secretKey);
+    return jwt.verify(token, secretKey) as { id: string; [key: string]: any };
   } catch (error) {
     throw new Error('Invalid or expired token');
   }
