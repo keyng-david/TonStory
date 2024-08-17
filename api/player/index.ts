@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import firestore from "../firestore.js";
-import { verifyJWT } from "../auth.js";
+import { verifyJWTToken } from '../auth.js';
 
 export const updatePoints = async (req: Request, res: Response) => {
   console.log("Updating points...");
