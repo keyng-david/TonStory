@@ -8,6 +8,12 @@ export default defineConfig({
   plugins: [react(), nodePolyfills(), sentryVitePlugin({
     org: "keyng",
     project: "javascript-react"
+  }), sentryVitePlugin({
+    org: "keyng",
+    project: "javascript-react"
+  }), sentryVitePlugin({
+    org: "keyng",
+    project: "javascript-react"
   })],
 
   define: {
