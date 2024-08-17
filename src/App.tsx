@@ -1,14 +1,18 @@
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
 import { useContext, useEffect, useState } from "react";
 import { useMiniApp } from '@tma.js/sdk-react';
 import { loadUserData } from "./api";
 import { store } from "./utils/store";
 
+Sentry.init({
+  dsn: "https://a970ec9feab9fbda4127e454d574e89b@o4507794807717888.ingest.us.sentry.io/4507794814009344", // Replace with your actual DSN from Sentry project settings
+  integrations: [new Integrations.BrowserTracing()],
+  tracesSampleRate: 1.0,
+});
+
 function ErrorBoundary({ children }: { children: React.ReactNode }) {
-  return (
-    <div>
-      {children}
-    </div>
-  );
+  return <Sentry.ErrorBoundary>{children}</Sentry.ErrorBoundary>;
 }
 
 export default function App() {
