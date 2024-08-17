@@ -1,7 +1,19 @@
 import * as admin from 'firebase-admin';
 
-const firestore = admin.firestore();
+// Check if Firebase has already been initialized
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+    }),
+  });
+} else {
+  admin.app(); // if already initialized, use that one
+}
 
-firestore.settings({ignoreUndefinedProperties: true});
+const firestore = admin.firestore();
+firestore.settings({ ignoreUndefinedProperties: true });
 
 export default firestore;
