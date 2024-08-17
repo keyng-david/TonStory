@@ -3,7 +3,6 @@ import { Telegraf } from 'telegraf';
 import { getOrCreateTelegramUser, formatTonStoryUser } from "../users/index.js";
 import firestore from "../firestore.js";
 
-// Retrieve the bot token from environment variables
 const botToken = process.env.tgbot;
 
 if (!botToken) {
@@ -31,16 +30,16 @@ const telegramBotUpdate = async (req: Request, res: Response) => {
         const formattedUser = formatTonStoryUser(message.from);
         userData = await getOrCreateTelegramUser(formattedUser);
 
-        // Save new user data
-        await userRef.set(userData);
+        if (userData) {
+          await userRef.set(userData);
+        }
       }
 
       // Check for the "/start" command
       if (message.text === "/start") {
         const gameUrl = "https://ton-story.vercel.app/";  // Replace with your actual frontend URL
 
-        // Send a message with an inline button to start the game
-        await bot.telegram.sendMessage(userId, `Welcome, ${userData.firstName}!\n\nClick the button below to start the game:`, {
+        await bot.telegram.sendMessage(userId, `Welcome, ${userData?.firstName || 'User'}!\n\nClick the button below to start the game:`, {
           reply_markup: {
             inline_keyboard: [
               [{ text: "Launch", url: gameUrl }]
@@ -48,7 +47,6 @@ const telegramBotUpdate = async (req: Request, res: Response) => {
           }
         });
       } else {
-        // Send a generic response if the message is not "/start"
         await bot.telegram.sendMessage(userId, "Sorry, I didn't understand that.");
       }
     }
