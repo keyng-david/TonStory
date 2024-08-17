@@ -19,12 +19,16 @@
     "types": ["node"],
     "jsx": "react-jsx"
   },
-  "include": ["src", "API"],
+  "include": [
+    "src",
+    "API",
+    "**/*.d.ts"  // Include .d.ts files
+  ],
   "exclude": [
     "node_modules", 
     "**/*.spec.ts", 
     "**/*.test.ts",
-    "**/__tests__/**/*" // Added exclusion for any test directories
+    "**/__tests__/**/*" // Exclude any test directories
   ],
   "compileOnSave": true,
   "references": [{ "path": "./tsconfig.node.json" }]
