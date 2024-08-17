@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 import express, { Request, Response } from 'express';
 import { updateLevel, updatePoints } from './player';
 import { getScoreboard } from './scoreboard';
