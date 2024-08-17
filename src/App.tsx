@@ -11,28 +11,23 @@ import { store } from "./utils/store";
 
 export default function App() {
   const [localDebugMessage, setLocalDebugMessage] = useState("App initializing...");
+  const [error, setError] = useState<string | null>(null);
   const miniApp = useMiniApp();
   const { dispatch, setGlobalDebugMessage } = useContext(store);
 
   useEffect(() => {
-    console.log('App is rendering...');
-    setLocalDebugMessage("App is rendering...");
-    setGlobalDebugMessage("App is rendering...");
     loadUser();
   }, []);
 
   async function loadUser() {
     try {
-      console.log('Loading user data...');
       setLocalDebugMessage("Loading user data...");
       setGlobalDebugMessage("Loading user data...");
       const { data } = await loadUserData();
-      console.log('User data loaded:', data);
       setLocalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
       setGlobalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
       dispatch({ type: 'SET_USER', payload: data });
       miniApp.ready();
-      console.log('MiniApp is ready');
       setLocalDebugMessage("MiniApp is ready");
       setGlobalDebugMessage("MiniApp is ready");
     } 
@@ -41,7 +36,17 @@ export default function App() {
       const errorMessage = `Error loading user data: ${error instanceof Error ? error.message : JSON.stringify(error)}`;
       setLocalDebugMessage(errorMessage);
       setGlobalDebugMessage(errorMessage);
+      setError(errorMessage);
     } 
+  }
+
+  if (error) {
+    return (
+      <div style={{ color: 'black', backgroundColor: 'white', padding: '20px' }}>
+        <h2>An error occurred</h2>
+        <p>{error}</p>
+      </div>
+    );
   }
 
   return (
@@ -53,6 +58,11 @@ export default function App() {
         <Route path="/share" element={<Share />} />
       </Routes>
       <Navbar />
+      {localDebugMessage && (
+        <div style={{ color: 'black', backgroundColor: 'white', padding: '10px', position: 'fixed', bottom: '0', left: '0', width: '100%' }}>
+          <small>{localDebugMessage}</small>
+        </div>
+      )}
     </div>
   );
 }
