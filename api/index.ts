@@ -1,4 +1,10 @@
 import * as admin from 'firebase-admin';
+import express, { Request, Response } from 'express';
+import { updateLevel, updatePoints } from './player';
+import { getScoreboard } from './scoreboard';
+import { auth } from './middleware';
+import { loadUserData } from './users';
+import telegramBotUpdate from './telegram';
 
 // Initialize Firebase Admin with environment variables
 admin.initializeApp({
@@ -6,40 +12,26 @@ admin.initializeApp({
     projectId: process.env.FIREBASE_PROJECT_ID,
     privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-    clientId: process.env.FIREBASE_CLIENT_ID,
-    authUri: process.env.FIREBASE_AUTH_URI,
-    tokenUri: process.env.FIREBASE_TOKEN_URI,
-    authProviderX509CertUrl: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
-    clientX509CertUrl: process.env.FIREBASE_CLIENT_X509_CERT_URL,
+    // Removed properties not needed by firebase-admin initialization
   }),
 });
 
-import { updateLevel, updatePoints } from './player';
-import { getScoreboard } from './scoreboard';
-import * as functions from 'firebase-functions';
-import { Request, Response } from 'express';
-import { auth } from './middleware';
-import { loadUserData } from './users';
-import { telegramBotUpdate } from './telegram';
-
-const express = require('express');
 const app = express();
 
 // Middleware and routes setup
-const cors = require('cors')({ origin: true });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors);
+app.use(require('cors')({ origin: true }));
 
 // Define routes
-app.get('/user-data', [auth], loadUserData);
-app.post('/update-points', [auth], updatePoints);
-app.post('/update-level', [auth], updateLevel);
-app.get('/scoreboard', [auth], getScoreboard);
+app.get('/user-data', auth, loadUserData);
+app.post('/update-points', auth, updatePoints);
+app.post('/update-level', auth, updateLevel);
+app.get('/scoreboard', auth, getScoreboard);
 app.get('/test', (req: Request, res: Response) => res.send('OK'));
 
-app.post('/telegram-bot-update', [auth], telegramBotUpdate);
+// Telegram bot update route
+app.post('/telegram-bot-update', auth, telegramBotUpdate);
 
-export const api = functions.runWith({
-  memory: '512MB',
-}).https.onRequest(app);
+// Export the app as a Vercel Serverless Function
+export default app;
