@@ -1,9 +1,22 @@
 import { Request, Response } from "express";
 import firestore from "../firestore.js";
-
+import { verifyJWTToken } from "../auth.js";  // Import JWT utility
 
 export const getScoreboard = async (req: Request, res: Response) => {
   try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).send("Authorization header missing");
+    }
+
+    const token = authHeader.split(' ')[1]; // Extract token
+    const decoded = verifyJWTToken(token); // Verify token
+
+    if (!decoded) {
+      return res.status(401).send("Invalid token");
+    }
+
     const usersRef = firestore.collection("users");
     const snapshot = await usersRef
       .orderBy("points", "desc")
