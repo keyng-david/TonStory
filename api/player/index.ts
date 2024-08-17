@@ -7,7 +7,7 @@ export const updatePoints = async (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).send("Unauthorized");
 
-  const { id } = verifyJWT(token);
+  const { id } = verifyJWTToken(token);
 
   try {
     const docRef = firestore.collection("users").doc(id.toString());
@@ -37,7 +37,7 @@ export const updateLevel = async (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).send("Unauthorized");
 
-  const { id } = verifyJWT(token);
+  const { id } = verifyJWTToken(token);
 
   try {
     const docRef = firestore.collection("users").doc(id.toString());
