@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
 import { useContext, useEffect, useState } from "react";
 import { useMiniApp } from '@tma.js/sdk-react';
 import { loadUserData } from "./api";
@@ -7,8 +6,16 @@ import { store } from "./utils/store";
 
 Sentry.init({
   dsn: "https://a970ec9feab9fbda4127e454d574e89b@o4507794807717888.ingest.us.sentry.io/4507794814009344", // Replace with your actual DSN from Sentry project settings
-  integrations: [new Integrations.BrowserTracing()],
-  tracesSampleRate: 1.0,
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration()
+  ],
+  // Tracing
+  tracesSampleRate: 1.0, // Capture 100% of the transactions
+  tracePropagationTargets: ["localhost", /^https:\/\/yourserver\.io\/api/],
+  // Session Replay
+  replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
 });
 
 function ErrorBoundary({ children }: { children: React.ReactNode }) {
@@ -33,7 +40,7 @@ export default function App() {
       setLocalDebugMessage("Loading user data...");
       setGlobalDebugMessage("Loading user data...");
 
-      const data = await loadUserData(); // Adjusted to directly use 'data' from the API call.
+      const data = await loadUserData();
 
       if (data) {
         console.log('User data loaded:', data);
