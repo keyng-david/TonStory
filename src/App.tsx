@@ -1,12 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { Route, Routes } from 'react-router-dom';
-import Navbar from "./components/Navbar";
-import Game from "./pages.tsx/Game";
-import Shop from "./pages.tsx/Shop";
-import Share from "./pages.tsx/Share";
 import { useMiniApp } from '@tma.js/sdk-react';
 import { loadUserData } from "./api";
-import Scoreboard from "./pages.tsx/Scoreboard";
 import { store } from "./utils/store";
 
 function ErrorBoundary({ children }: { children: React.ReactNode }) {
@@ -34,15 +28,21 @@ export default function App() {
       console.log('Loading user data...');
       setLocalDebugMessage("Loading user data...");
       setGlobalDebugMessage("Loading user data...");
-      const { data } = await loadUserData();
-      console.log('User data loaded:', data);
-      setLocalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
-      setGlobalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
-      dispatch({ type: 'SET_USER', payload: data });
-      miniApp.ready();
-      console.log('MiniApp is ready');
-      setLocalDebugMessage("MiniApp is ready");
-      setGlobalDebugMessage("MiniApp is ready");
+
+      const data = await loadUserData(); // Adjusted to directly use 'data' from the API call.
+
+      if (data) {
+        console.log('User data loaded:', data);
+        setLocalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
+        setGlobalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
+        dispatch({ type: 'SET_USER', payload: data });
+        miniApp.ready();
+        console.log('MiniApp is ready');
+        setLocalDebugMessage("MiniApp is ready");
+        setGlobalDebugMessage("MiniApp is ready");
+      } else {
+        throw new Error("User data is undefined or null");
+      }
     } catch (error) {
       console.error("Error loading user data", error);
       const errorMessage = `Error loading user data: ${error instanceof Error ? error.message : JSON.stringify(error)}`;
@@ -54,13 +54,7 @@ export default function App() {
   return (
     <ErrorBoundary>
       <div>
-        <Routes>
-          <Route path="/" element={<Game />} />
-          <Route path="/scoreboard" element={<Scoreboard />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/share" element={<Share />} />
-        </Routes>
-        <Navbar />
+        <p>{localDebugMessage}</p> {/* Display local debug messages */}
       </div>
     </ErrorBoundary>
   );
