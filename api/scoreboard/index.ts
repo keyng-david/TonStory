@@ -1,27 +1,16 @@
 import { Request, Response } from "express";
 import firestore from "../firestore.js";
-import { verifyJWTToken } from "../auth.js";  // Import JWT utility
+import { verifyJWT } from "../auth.js";
 
 export const getScoreboard = async (req: Request, res: Response) => {
   try {
-    const authHeader = req.headers.authorization;
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).send("Unauthorized");
 
-    if (!authHeader) {
-      return res.status(401).send("Authorization header missing");
-    }
-
-    const token = authHeader.split(' ')[1]; // Extract token
-    const decoded = verifyJWTToken(token); // Verify token
-
-    if (!decoded) {
-      return res.status(401).send("Invalid token");
-    }
+    verifyJWT(token);
 
     const usersRef = firestore.collection("users");
-    const snapshot = await usersRef
-      .orderBy("points", "desc")
-      .limit(10)
-      .get();
+    const snapshot = await usersRef.orderBy("points", "desc").limit(10).get();
 
     const scoreboard = snapshot.docs.map((doc) => doc.data());
 
