@@ -4,7 +4,7 @@ import { retrieveLaunchParams } from '@tma.js/sdk';
 const { initDataRaw } = retrieveLaunchParams();
 
 // Assuming your Vercel deployment is organized under the /API base URL
-const API_BASE_URL = process.env.base || 'https://ton-story.vercel.app/API';
+const API_BASE_URL = process.env.base || 'https://ton-story.vercel.app/api';
 
 console.log("API_BASE_URL:", API_BASE_URL);
 
