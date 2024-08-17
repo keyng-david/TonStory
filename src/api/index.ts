@@ -10,11 +10,11 @@ const headers = {
 // Load user data from the user function
 export const loadUserData = async () => {
   console.log("Starting API call to load user data...");
-  console.log("API endpoint: /api/user-data");
+  console.log("API endpoint: /api/users");
   console.log("Headers:", headers);
 
   try {
-    const response = await axios.get(`/api/user-data`, { headers });
+    const response = await axios.get(`/api/users`, { headers });
 
     // Check response status and data
     console.log("API response status:", response.status);
@@ -68,11 +68,11 @@ export const getScoreboard = async () => {
 // Update points using the update-points function
 export const updatePoints = async () => {
   console.log("Starting API call to update points...");
-  console.log("API endpoint: /api/update-points");
+  console.log("API endpoint: /api/players");
   console.log("Headers:", headers);
 
   try {
-    const response = await axios.post(`/api/update-points`, {}, { headers });
+    const response = await axios.post(`/api/players`, {}, { headers });
 
     // Check response status and data
     console.log("API response status:", response.status);
