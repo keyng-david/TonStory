@@ -1,7 +1,6 @@
 import * as admin from 'firebase-admin';
 
-// Check if Firebase has already been initialized
-if (!admin.apps.length) {
+if (!admin.apps || !admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: process.env.FIREBASE_PROJECT_ID,
@@ -9,8 +8,6 @@ if (!admin.apps.length) {
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     }),
   });
-} else {
-  admin.app(); // if already initialized, use that one
 }
 
 const firestore = admin.firestore();
