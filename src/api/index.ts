@@ -15,18 +15,22 @@ export const loadUserData = async () => {
 
   try {
     const response = await axios.get(`/api/user-data`, { headers });
-    
+
     // Check response status and data
     console.log("API response status:", response.status);
     console.log("API response data:", response.data);
 
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     // Log detailed error information
-    console.error("Error fetching user data:", error);
-    if (error.response) {
-      console.error("Error response status:", error.response.status);
-      console.error("Error response data:", error.response.data);
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching user data:", error.message);
+      if (error.response) {
+        console.error("Error response status:", error.response.status);
+        console.error("Error response data:", error.response.data);
+      }
+    } else {
+      console.error("Unexpected error:", error);
     }
     throw error;
   }
@@ -46,12 +50,16 @@ export const getScoreboard = async () => {
     console.log("API response data:", response.data);
 
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     // Log detailed error information
-    console.error("Error fetching scoreboard:", error);
-    if (error.response) {
-      console.error("Error response status:", error.response.status);
-      console.error("Error response data:", error.response.data);
+    if (axios.isAxiosError(error)) {
+      console.error("Error fetching scoreboard:", error.message);
+      if (error.response) {
+        console.error("Error response status:", error.response.status);
+        console.error("Error response data:", error.response.data);
+      }
+    } else {
+      console.error("Unexpected error:", error);
     }
     throw error;
   }
@@ -71,12 +79,16 @@ export const updatePoints = async () => {
     console.log("API response data:", response.data);
 
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     // Log detailed error information
-    console.error("Error updating points:", error);
-    if (error.response) {
-      console.error("Error response status:", error.response.status);
-      console.error("Error response data:", error.response.data);
+    if (axios.isAxiosError(error)) {
+      console.error("Error updating points:", error.message);
+      if (error.response) {
+        console.error("Error response status:", error.response.status);
+        console.error("Error response data:", error.response.data);
+      }
+    } else {
+      console.error("Unexpected error:", error);
     }
     throw error;
   }
