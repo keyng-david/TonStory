@@ -5,7 +5,7 @@ import { loadUserData } from "./api";
 import { store } from "./utils/store";
 
 Sentry.init({
-  dsn: "https://a970ec9feab9fbda4127e454d574e89b@o4507794807717888.ingest.us.sentry.io/4507794814009344", // Replace with your actual DSN from Sentry project settings
+  dsn: "https://91e7602d4c27ea52a97e6b1d9bb9bbd4@o4507794807717888.ingest.us.sentry.io/4507794931777536", // Replace with your actual DSN from Sentry project settings
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.replayIntegration()
