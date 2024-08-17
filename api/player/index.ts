@@ -1,12 +1,27 @@
 import { Request, Response } from "express";
 import firestore from "../firestore.js";
+import { verifyJWTToken } from "../auth.js";  // Import JWT utility
 
 export const updatePoints = async (req: Request, res: Response) => {
   console.log("Updating points...");
-  const { user } = res.locals.initData;
 
   try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).send("Authorization header missing");
+    }
+
+    const token = authHeader.split(' ')[1]; // Extract token
+    const decoded = verifyJWTToken(token); // Verify token
+
+    if (!decoded) {
+      return res.status(401).send("Invalid token");
+    }
+
+    const { user } = decoded;  // Assuming `user` is part of the payload
     const docRef = firestore.collection("users").doc(user.id.toString());
+
     await firestore.runTransaction(async (transaction) => {
       const doc = await transaction.get(docRef);
       if (!doc.exists) throw new Error("Document does not exist");
@@ -30,10 +45,24 @@ export const updatePoints = async (req: Request, res: Response) => {
 
 export const updateLevel = async (req: Request, res: Response) => {
   console.log("Updating level...");
-  const { user } = res.locals.initData;
 
   try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+      return res.status(401).send("Authorization header missing");
+    }
+
+    const token = authHeader.split(' ')[1]; // Extract token
+    const decoded = verifyJWTToken(token); // Verify token
+
+    if (!decoded) {
+      return res.status(401).send("Invalid token");
+    }
+
+    const { user } = decoded;  // Assuming `user` is part of the payload
     const docRef = firestore.collection("users").doc(user.id.toString());
+
     await firestore.runTransaction(async (transaction) => {
       const doc = await transaction.get(docRef);
       if (!doc.exists) throw new Error("Document does not exist");
