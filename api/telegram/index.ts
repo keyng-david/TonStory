@@ -3,7 +3,7 @@ import { Telegraf } from 'telegraf';
 import { getOrCreateTelegramUser, formatTonStoryUser } from "../users/index.js";
 import firestore from "../firestore.js";
 
-// Retrieve the bot token from Firebase config
+// Retrieve the bot token from environment variables
 const botToken = process.env.tgbot;
 
 if (!botToken) {
