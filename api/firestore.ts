@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 
 if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_PRIVATE_KEY_BASE64 || !process.env.FIREBASE_CLIENT_EMAIL) {
   console.error("Missing Firebase environment variables");
