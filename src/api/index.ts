@@ -9,7 +9,7 @@ export default function App() {
     const fetchUserData = async () => {
       try {
         // Making the API call to your backend
-        const response = await axios.get('/api/user-data');
+        const response = await axios.get('/api/user');
         const userData = response.data.data;  // Accessing user data from the response
 
         if (userData && userData.username) {
