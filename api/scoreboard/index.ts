@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import firestore from "../firestore.js";
 import { verifyJWTToken } from '../auth.js';
+
 export const getScoreboard = async (req: Request, res: Response) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).send("Unauthorized");
 
-    verifyJWT(token);
+    verifyJWTToken(token);
 
     const usersRef = firestore.collection("users");
     const snapshot = await usersRef.orderBy("points", "desc").limit(10).get();
