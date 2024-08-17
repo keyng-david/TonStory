@@ -1,41 +1,67 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useContext, useEffect, useState } from "react";
+import { Route, Routes } from 'react-router-dom';
+import Navbar from "./components/Navbar";
+import Game from "./pages.tsx/Game";
+import Shop from "./pages.tsx/Shop";
+import Share from "./pages.tsx/Share";
+import { useMiniApp } from '@tma.js/sdk-react';
+import { loadUserData } from "./api";
+import Scoreboard from "./pages.tsx/Scoreboard";
+import { store } from "./utils/store";
+
+function ErrorBoundary({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      {children}
+    </div>
+  );
+}
 
 export default function App() {
-  const [username, setUsername] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [localDebugMessage, setLocalDebugMessage] = useState("App initializing...");
+  const miniApp = useMiniApp();
+  const { dispatch, setGlobalDebugMessage } = useContext(store);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Making the API call to your backend, ensure this URL matches your deployed environment
-        const response = await axios.get('/api/user-data');
-        const { username } = response.data;
-
-        if (username) {
-          setUsername(username);
-        } else {
-          setUsername('Unknown User');
-        }
-      } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError('Failed to load user data');
-      }
-    };
-
-    fetchUserData();
+    console.log('App is rendering...');
+    setLocalDebugMessage("App is rendering...");
+    setGlobalDebugMessage("App is rendering...");
+    loadUser();
   }, []);
 
+  async function loadUser() {
+    try {
+      console.log('Loading user data...');
+      setLocalDebugMessage("Loading user data...");
+      setGlobalDebugMessage("Loading user data...");
+      const { data } = await loadUserData();
+      console.log('User data loaded:', data);
+      setLocalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
+      setGlobalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
+      dispatch({ type: 'SET_USER', payload: data });
+      miniApp.ready();
+      console.log('MiniApp is ready');
+      setLocalDebugMessage("MiniApp is ready");
+      setGlobalDebugMessage("MiniApp is ready");
+    } catch (error) {
+      console.error("Error loading user data", error);
+      const errorMessage = `Error loading user data: ${error instanceof Error ? error.message : JSON.stringify(error)}`;
+      setLocalDebugMessage(errorMessage);
+      setGlobalDebugMessage(errorMessage);
+    }
+  }
+
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>Ton Story</h1>
-      {error ? (
-        <p>{error}</p>
-      ) : username ? (
-        <p>Welcome, {username}! If you see this message, React is working correctly.</p>
-      ) : (
-        <p>Loading user data...</p>
-      )}
-    </div>
+    <ErrorBoundary>
+      <div>
+        <Routes>
+          <Route path="/" element={<Game />} />
+          <Route path="/scoreboard" element={<Scoreboard />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/share" element={<Share />} />
+        </Routes>
+        <Navbar />
+      </div>
+    </ErrorBoundary>
   );
 }
