@@ -8,15 +8,14 @@ import { StateProvider } from "./utils/store";
 
 eruda.init();
 
-// Adjust the error and loading components to ensure correct typing
 interface SDKProviderErrorProps {
   error: unknown;
 }
 
 function SDKProviderError({ error }: SDKProviderErrorProps): ReactNode {
   return (
-    <div>
-      Oops. Something went wrong.
+    <div style={{ padding: "20px", color: "black", backgroundColor: "white" }}>
+      <h2>Oops. Something went wrong.</h2>
       <blockquote>
         <code>
           {error instanceof Error ? error.message : JSON.stringify(error)}
@@ -34,12 +33,15 @@ function SDKInitialState(): ReactNode {
   return <div>Waiting for initialization to start...</div>;
 }
 
-// Create the root element for React
 const container = document.getElementById("root");
 const root = createRoot(container!);
 
 root.render(
-  <SDKProvider>
+  <SDKProvider
+    errorComponent={SDKProviderError}
+    loadingComponent={SDKProviderLoading}
+    initialStateComponent={SDKInitialState}
+  >
     <StateProvider>
       <BrowserRouter>
         <App />
