@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from 'react-router-dom';
 import Navbar from "./components/Navbar";
-import Game from "./pages/Game";
-import Shop from "./pages/Shop";
-import Share from "./pages/Share";
-import Scoreboard from "./pages/Scoreboard";
+import Game from "./pages.tsx/Game";
+import Shop from "./pages.tsx/Shop";
+import Share from "./pages.tsx/Share";
+import Scoreboard from "./pages.tsx/Scoreboard";
 
 function App() {
   const [localDebugMessage, setLocalDebugMessage] = useState("App initializing...");
