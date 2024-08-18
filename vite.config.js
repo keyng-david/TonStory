@@ -14,6 +14,9 @@ export default defineConfig({
   }), sentryVitePlugin({
     org: "keyng",
     project: "javascript-react"
+  }), sentryVitePlugin({
+    org: "keyng",
+    project: "javascript-react-iy"
   })],
 
   define: {
