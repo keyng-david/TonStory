@@ -6,6 +6,7 @@ import { SDKProvider } from '@tma.js/sdk-react';
 import eruda from 'eruda';
 import { StateProvider } from "./utils/store";
 import './sentryConfig'; // Import Sentry configuration to initialize it
+import * as Sentry from "@sentry/react"; // Import Sentry to manually capture exceptions
 
 eruda.init();
 
@@ -35,4 +36,22 @@ if (container) {
   console.error("Root container not found");
 }
 
-return <button onClick={() => methodDoesNotExist()}>Break the world</button>;
+// Intentional Error Test Code
+const TestButton = () => {
+  return (
+    <button
+      onClick={() => {
+        try {
+          methodDoesNotExist(); // This is the intentional error
+        } catch (error) {
+          Sentry.captureException(error); // Manually capture the exception with Sentry
+          throw error; // Re-throw the error to ensure it propagates correctly
+        }
+      }}
+    >
+      Break the world
+    </button>
+  );
+};
+
+export default TestButton;
