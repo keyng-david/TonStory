@@ -61,7 +61,7 @@ export default function App() {
       setGlobalDebugMessage(errorMessage);
     }
   }
-
+  return <button onClick={() => methodDoesNotExist()}>Break the world</button>;
   return (
     <ErrorBoundary>
       <div>
@@ -70,3 +70,4 @@ export default function App() {
     </ErrorBoundary>
   );
 }
+
