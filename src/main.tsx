@@ -34,3 +34,5 @@ if (container) {
 } else {
   console.error("Root container not found");
 }
+
+return <button onClick={() => methodDoesNotExist()}>Break the world</button>;
