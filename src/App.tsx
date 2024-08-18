@@ -34,7 +34,7 @@ function App() {
     <div>
       <h1>Debug Info: {localDebugMessage}</h1>
       <Routes>
-        <Route path="/" element={<Game />} />
+        <Route path="/" element={<Shop />} />
         <Route path="/scoreboard" element={<Scoreboard />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/share" element={<Share />} />
