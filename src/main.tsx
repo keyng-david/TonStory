@@ -7,8 +7,10 @@ import eruda from 'eruda';
 import { StateProvider } from "./utils/store";
 import LogRocket from 'logrocket';
 
-eruda.init();
+
 LogRocket.init('q029lf/tonstory');
+eruda.init();
+
 
 const container = document.getElementById("root");
 
