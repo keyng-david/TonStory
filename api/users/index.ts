@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import firestore from "../firestore.js";
 import { TelegramBotUser, TelegramMiniAppUser, TonStoryUser } from "../types/index.js";
 
-const jwtSecret = process.env.JWT_SECRET;
+const jwtSecret = process.env.JWT_SECRET || 'your_secret_key';
 
 if (!jwtSecret) {
   throw new Error("JWT secret is missing");
