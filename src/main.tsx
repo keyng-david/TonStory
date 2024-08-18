@@ -5,10 +5,10 @@ import App from "./App";
 import { SDKProvider } from '@tma.js/sdk-react';
 import eruda from 'eruda';
 import { StateProvider } from "./utils/store";
-import './sentryConfig'; // Import Sentry configuration to initialize it
-import * as Sentry from "@sentry/react"; // Import Sentry to manually capture exceptions
+import LogRocket from 'logrocket';
 
 eruda.init();
+LogRocket.init('your-app-id'); // Replace 'your-app-id' with your actual LogRocket app ID
 
 const container = document.getElementById("root");
 
@@ -38,7 +38,6 @@ if (container) {
 
 // Intentional Error Test Code
 const TestButton = () => {
-  // Declare a dummy function to satisfy TypeScript
   const methodDoesNotExist = () => {
     throw new Error("This is a test error");
   };
@@ -49,7 +48,7 @@ const TestButton = () => {
         try {
           methodDoesNotExist(); // This triggers the error
         } catch (error) {
-          Sentry.captureException(error); // Manually capture the exception with Sentry
+          LogRocket.captureException(error); // Manually capture the exception with LogRocket
           throw error; // Re-throw the error to ensure it propagates correctly
         }
       }}
