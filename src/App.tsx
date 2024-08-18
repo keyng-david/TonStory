@@ -5,7 +5,7 @@ import Game from "./pages.tsx/Game";
 import Shop from "./pages.tsx/Shop";
 import Share from "./pages.tsx/Share";
 import { useMiniApp } from '@tma.js/sdk-react';
-import { loadUserData } from "./api";
+// import { loadUserData } from "./api"; // Temporarily commenting out this line
 import Scoreboard from "./pages.tsx/Scoreboard";
 import { store } from "./utils/store";
 
@@ -26,9 +26,16 @@ export default function App() {
     console.log('App is rendering...');
     setLocalDebugMessage("App is rendering...");
     setGlobalDebugMessage("App is rendering...");
-    loadUser();
+    // Commenting out loadUser() to bypass user loading for debugging
+    // loadUser();
+    miniApp.ready();
+    console.log('MiniApp is ready');
+    setLocalDebugMessage("MiniApp is ready");
+    setGlobalDebugMessage("MiniApp is ready");
   }, []);
 
+  // Temporarily comment out the loadUser function for debugging
+  /*
   async function loadUser() {
     try {
       console.log('Loading user data...');
@@ -50,10 +57,12 @@ export default function App() {
       setGlobalDebugMessage(errorMessage);
     }
   }
+  */
 
   return (
     <ErrorBoundary>
       <div>
+        <p style={{ color: 'red' }}>{localDebugMessage}</p> {/* Display debug message on the screen */}
         <Routes>
           <Route path="/" element={<Game />} />
           <Route path="/scoreboard" element={<Scoreboard />} />
