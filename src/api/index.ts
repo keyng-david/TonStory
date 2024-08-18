@@ -3,8 +3,11 @@ import { retrieveLaunchParams } from '@tma.js/sdk';
 
 const { initDataRaw } = retrieveLaunchParams();
 
+// Assuming the JWT token is generated and stored somewhere
+const jwtToken = process.env.JWT_SECRET || 'your_jwt_token_here';
+
 const headers = {
-  Authorization: `tma ${initDataRaw}`
+  Authorization: `Bearer ${jwtToken}`,
 };
 
 // Load user data from the user function
@@ -22,7 +25,6 @@ export const loadUserData = async () => {
 
     return response.data;
   } catch (error: unknown) {
-    // Log detailed error information
     if (axios.isAxiosError(error)) {
       console.error("Error fetching user data:", error.message);
       if (error.response) {
@@ -45,13 +47,11 @@ export const getScoreboard = async () => {
   try {
     const response = await axios.get(`/api/scoreboard`, { headers });
 
-    // Check response status and data
     console.log("API response status:", response.status);
     console.log("API response data:", response.data);
 
     return response.data;
   } catch (error: unknown) {
-    // Log detailed error information
     if (axios.isAxiosError(error)) {
       console.error("Error fetching scoreboard:", error.message);
       if (error.response) {
@@ -74,13 +74,11 @@ export const updatePoints = async () => {
   try {
     const response = await axios.post(`/api/players`, {}, { headers });
 
-    // Check response status and data
     console.log("API response status:", response.status);
     console.log("API response data:", response.data);
 
     return response.data;
   } catch (error: unknown) {
-    // Log detailed error information
     if (axios.isAxiosError(error)) {
       console.error("Error updating points:", error.message);
       if (error.response) {
