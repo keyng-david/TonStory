@@ -5,7 +5,7 @@ import App from "./App";
 import { SDKProvider } from '@tma.js/sdk-react';
 import eruda from 'eruda';
 import { StateProvider } from "./utils/store";
-import './sentryConfig'; // Initialize Sentry
+import './sentryConfig'; // Import Sentry configuration to initialize it
 
 eruda.init();
 
