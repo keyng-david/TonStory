@@ -38,11 +38,16 @@ if (container) {
 
 // Intentional Error Test Code
 const TestButton = () => {
+  // Declare a dummy function to satisfy TypeScript
+  const methodDoesNotExist = () => {
+    throw new Error("This is a test error");
+  };
+
   return (
     <button
       onClick={() => {
         try {
-          methodDoesNotExist(); // This is the intentional error
+          methodDoesNotExist(); // This triggers the error
         } catch (error) {
           Sentry.captureException(error); // Manually capture the exception with Sentry
           throw error; // Re-throw the error to ensure it propagates correctly
