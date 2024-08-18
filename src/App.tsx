@@ -2,11 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useMiniApp } from '@tma.js/sdk-react';
 import { loadUserData } from "./api";
 import { store } from "./utils/store";
-import * as Sentry from "@sentry/react";
-
-function ErrorBoundary({ children }: { children: React.ReactNode }) {
-  return <Sentry.ErrorBoundary>{children}</Sentry.ErrorBoundary>;
-}
+import LogRocket from 'logrocket';
 
 export default function App() {
   const [localDebugMessage, setLocalDebugMessage] = useState("App initializing...");
@@ -43,17 +39,15 @@ export default function App() {
     } catch (error) {
       console.error("Error loading user data", error);
       const errorMessage = `Error loading user data: ${error instanceof Error ? error.message : JSON.stringify(error)}`;
-      Sentry.captureException(error); // Send error to Sentry
+      LogRocket.captureException(error); // Send error to LogRocket
       setLocalDebugMessage(errorMessage);
       setGlobalDebugMessage(errorMessage);
     }
   }
 
   return (
-    <ErrorBoundary>
-      <div>
-        <p>{localDebugMessage}</p> {/* Display local debug messages */}
-      </div>
-    </ErrorBoundary>
+    <div>
+      <p>{localDebugMessage}</p> {/* Display local debug messages */}
+    </div>
   );
 }
