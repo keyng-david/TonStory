@@ -1,38 +1,34 @@
-import { Request, Response } from "express";
-import { parseInitData, InitDataParsed } from '@telegram-apps/sdk';
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
-function setInitData(res: Response, initData: InitDataParsed): void {
-  res.locals.initData = initData;
-}
+const secretKey = process.env.JWT_SECRET || 'your_secret_key';
 
-export const auth = async (request: Request, response: Response, next: any) => {
+export const auth = (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("Request to: ", request.url);
-    console.log('Running auth middleware');
+    console.log("Request to: ", req.url);
+    console.log('Running JWT auth middleware');
 
-    if (request.url === '/telegram-bot-update') {
+    if (req.url === '/telegram-bot-update') {
       return next();
     }
 
-    const [authType, authData = ''] = (request.header('authorization') || '').split(' ');
+    const token = req.headers.authorization?.split(' ')[1];
 
-    switch (authType) {
-      case 'tma':
-        try {
-          const parsedData = parseInitData(authData);
-          // Removed validateAuthData function call, since it's not a valid export
-          setInitData(response, parsedData);
-          console.log('Successfully verified token');
-          return next();
-        } catch (e) {
-          return next(e);
-        }
-      default:
-        return next(new Error('Unauthorized'));
+    if (!token) {
+      return res.status(401).json({ error: 'Authorization token missing' });
     }
-  } catch {
-    return response.status(401).json({
-      error: new Error('Invalid request!'),
-    });
+
+    try {
+      const decoded = jwt.verify(token, secretKey);
+      res.locals.user = decoded;  // Store the decoded token data for later use
+      console.log('Successfully verified JWT token');
+      next();
+    } catch (error) {
+      console.error('Invalid or expired JWT token:', error);
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+  } catch (error) {
+    console.error('Error in JWT authentication middleware:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
