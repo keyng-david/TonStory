@@ -8,7 +8,7 @@ import { StateProvider } from "./utils/store";
 import LogRocket from 'logrocket';
 
 eruda.init();
-LogRocket.init('your-app-id'); // Replace 'your-app-id' with your actual LogRocket app ID
+LogRocket.init('q029lf/tonstory');
 
 const container = document.getElementById("root");
 
