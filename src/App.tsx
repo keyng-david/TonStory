@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from 'react-router-dom';
 import Navbar from "./components/Navbar";
-import Game from "./pages.tsx/Game";
+// import Game from "./pages.tsx/Game";
 import Shop from "./pages.tsx/Shop";
-import Share from "./pages.tsx/Share";
-import Scoreboard from "./pages.tsx/Scoreboard";
+// import Share from "./pages.tsx/Share";
+// import Scoreboard from "./pages.tsx/Scoreboard";
 
 function App() {
   const [localDebugMessage, setLocalDebugMessage] = useState("App initializing...");
@@ -35,9 +35,9 @@ function App() {
       <h1>Debug Info: {localDebugMessage}</h1>
       <Routes>
         <Route path="/" element={<Shop />} />
-        <Route path="/scoreboard" element={<Scoreboard />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/share" element={<Share />} />
+       // <Route path="/scoreboard" element={<Scoreboard />} />
+     //  <Route path="/shop" element={<Shop />} />
+      //  <Route path="/share" element={<Share />} />
       </Routes>
       <Navbar />
     </div>
