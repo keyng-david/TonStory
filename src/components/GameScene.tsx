@@ -1,4 +1,4 @@
-import { updatePoints } from "../api/index";
+import { updatePointsDebug } from "../api/index";
 import { ATTACK_INTERVAL, Keys, MOVE_SPEED } from "../utils/gameConfig";
 import { setupGameEnvironment } from "../utils/gameController";
 import { KaboomCtx} from "kaboom";
@@ -26,7 +26,7 @@ export default function loadGameScene(k: KaboomCtx, dispatch: any) {
     dispatch({
       type: 'UPDATE_POINTS'
     });
-    await updatePoints();
+    await updatePointsDebug();
 	});
 
   player.onCollide("ground", () => {
