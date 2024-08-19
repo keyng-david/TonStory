@@ -20,9 +20,9 @@ export default function Navbar() {
   return (
     <Bar>
       <PlayCircleOutlined style={{fontSize: 20}} onClick={() => navigate('/')} />
-      <TrophyOutlined style={{fontSize: 20}} onClick={() => navigate('/scoreboard')} />
+    // <TrophyOutlined style={{fontSize: 20}} onClick={() => navigate('/scoreboard')} />
       <ShopOutlined style={{fontSize: 20}} onClick={() => navigate('/shop')} />
-      <ShareAltOutlined style={{fontSize: 20}} onClick={() => navigate('/share')} />
+    // <ShareAltOutlined style={{fontSize: 20}} onClick={() => navigate('/share')} />
     </Bar>
   );
 }
