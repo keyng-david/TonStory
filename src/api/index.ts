@@ -1,93 +1,68 @@
 import axios from 'axios';
-import { retrieveLaunchParams } from '@tma.js/sdk';
-
-const { initDataRaw } = retrieveLaunchParams();
 
 // Assuming the JWT token is generated and stored somewhere
 const jwtToken = process.env.JWT_SECRET || 'your_jwt_token_here';
+const headers = { Authorization: `Bearer ${jwtToken}` };
 
-const headers = {
-  Authorization: `Bearer ${jwtToken}`,
-};
-
-// Load user data from the user function
-export const loadUserData = async () => {
-  console.log("Starting API call to load user data...");
-  console.log("API endpoint: /api/users");
-  console.log("Headers:", headers);
-
+// Debug-enabled version of loadUserData
+export const loadUserDataDebug = async (setLocalDebugMessage: (message: string) => void) => {
+  setLocalDebugMessage("Starting API call to load user data...");
+  
   try {
     const response = await axios.get(`/api/users`, { headers });
 
-    // Check response status and data
-    console.log("API response status:", response.status);
-    console.log("API response data:", response.data);
-
+    setLocalDebugMessage(`API response status: ${response.status}`);
+    setLocalDebugMessage(`API response data: ${JSON.stringify(response.data)}`);
+    
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error fetching user data:", error.message);
-      if (error.response) {
-        console.error("Error response status:", error.response.status);
-        console.error("Error response data:", error.response.data);
-      }
-    } else {
-      console.error("Unexpected error:", error);
-    }
+    handleApiError(error, setLocalDebugMessage);
     throw error;
   }
 };
 
-// Fetch scoreboard data from the scoreboard function
-export const getScoreboard = async () => {
-  console.log("Starting API call to fetch scoreboard data...");
-  console.log("API endpoint: /api/scoreboard");
-  console.log("Headers:", headers);
-
+// Debug-enabled version of getScoreboard
+export const getScoreboardDebug = async (setLocalDebugMessage: (message: string) => void) => {
+  setLocalDebugMessage("Starting API call to fetch scoreboard data...");
+  
   try {
     const response = await axios.get(`/api/scoreboard`, { headers });
 
-    console.log("API response status:", response.status);
-    console.log("API response data:", response.data);
-
+    setLocalDebugMessage(`API response status: ${response.status}`);
+    setLocalDebugMessage(`API response data: ${JSON.stringify(response.data)}`);
+    
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error fetching scoreboard:", error.message);
-      if (error.response) {
-        console.error("Error response status:", error.response.status);
-        console.error("Error response data:", error.response.data);
-      }
-    } else {
-      console.error("Unexpected error:", error);
-    }
+    handleApiError(error, setLocalDebugMessage);
     throw error;
   }
 };
 
-// Update points using the update-points function
-export const updatePoints = async () => {
-  console.log("Starting API call to update points...");
-  console.log("API endpoint: /api/players");
-  console.log("Headers:", headers);
-
+// Debug-enabled version of updatePoints
+export const updatePointsDebug = async (setLocalDebugMessage: (message: string) => void) => {
+  setLocalDebugMessage("Starting API call to update points...");
+  
   try {
     const response = await axios.post(`/api/players`, {}, { headers });
 
-    console.log("API response status:", response.status);
-    console.log("API response data:", response.data);
-
+    setLocalDebugMessage(`API response status: ${response.status}`);
+    setLocalDebugMessage(`API response data: ${JSON.stringify(response.data)}`);
+    
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      console.error("Error updating points:", error.message);
-      if (error.response) {
-        console.error("Error response status:", error.response.status);
-        console.error("Error response data:", error.response.data);
-      }
-    } else {
-      console.error("Unexpected error:", error);
-    }
+    handleApiError(error, setLocalDebugMessage);
     throw error;
+  }
+};
+
+const handleApiError = (error: unknown, setLocalDebugMessage: (message: string) => void) => {
+  if (axios.isAxiosError(error)) {
+    setLocalDebugMessage(`Error fetching data: ${error.message}`);
+    if (error.response) {
+      setLocalDebugMessage(`Error response status: ${error.response.status}`);
+      setLocalDebugMessage(`Error response data: ${JSON.stringify(error.response.data)}`);
+    }
+  } else {
+    setLocalDebugMessage(`Unexpected error: ${JSON.stringify(error)}`);
   }
 };
