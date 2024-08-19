@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 // import Shop from "./pages.tsx/Shop";
 // import Share from "./pages.tsx/Share";
 import { useMiniApp } from '@tma.js/sdk-react';
-import { loadUserData, getScoreboard, updatePoints } from "./api";
+import { loadUserDataDebug, getScoreboardDebug, updatePointsDebug } from "./api";
 // import Scoreboard from "./pages.tsx/Scoreboard";
 import { store } from "./utils/store";
 
@@ -32,7 +32,7 @@ export default function App() {
     try {
       setLocalDebugMessage("Loading user data...");
       setGlobalDebugMessage("Loading user data...");
-      const data = await loadUserData(setLocalDebugMessage);
+      const data = await loadUserDataDebug(setLocalDebugMessage);
       setLocalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
       setGlobalDebugMessage(`User data loaded: ${JSON.stringify(data)}`);
       dispatch({ type: 'SET_USER', payload: data });
