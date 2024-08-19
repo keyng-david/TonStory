@@ -1,43 +1,42 @@
 import { updatePointsDebug } from "../api/index";
 import { ATTACK_INTERVAL, Keys, MOVE_SPEED } from "../utils/gameConfig";
 import { setupGameEnvironment } from "../utils/gameController";
-import { KaboomCtx } from "kaboom";
+import { KaboomCtx} from "kaboom";
 
-export default function loadGameScene(k: KaboomCtx, dispatch: any, setLocalDebugMessage: (msg: string) => void) {
-  const { player, enemies } = setupGameEnvironment(k);
+export default function loadGameScene(k: KaboomCtx, dispatch: any) {
+  const {player, enemies} = setupGameEnvironment(k);
   enemies.map(enemy => enemy.play("idle"));
 
   k.on("death", "enemy", (e) => {
-    k.destroy(e);
-    k.shake(50);
-  });
+                k.destroy(e)
+                k.shake(50)
+        })
 
   k.on("hurt", "enemy", (e) => {
-    k.shake(1);
-  });
+                k.shake(1);
+        })
 
   k.on("death", "player", (e) => {
-    k.destroy(e);
-    k.shake(50);
-  });
-
+                k.destroy(e)
+                k.shake(50)
+        })
   k.onCollide(player.id + "attackHitbox", "enemy", async (b, e) => {
-    b.destroy();
-    e.hurt(1);
+    b.destroy()
+                e.hurt(1);
     dispatch({
       type: 'UPDATE_POINTS'
     });
-    await updatePointsDebug(setLocalDebugMessage);  // Pass the debug function here
-  });
+    await updatePointsDebug();
+        });
 
   player.onCollide("ground", () => {
-    k.play("step");
-  });
+    k.play("step")
+  })
 
   player.onGround(handleAnimation);
 
   player.onUpdate(() => {
-    k.camPos(player.pos);
+    k.camPos(player.pos); 
   });
 
   k.onKeyPress(Keys.LEFT, run);
@@ -89,15 +88,15 @@ export default function loadGameScene(k: KaboomCtx, dispatch: any, setLocalDebug
   let lastAttackTime = 0;
   let attackSequence = 0;
 
-  function attack() {
-    const currentTime = k.time() * 1000;
+  function attack(){
+    const currentTime = k.time() * 1000; 
     const timeSinceLastAttack = currentTime - lastAttackTime;
 
     const slashX = player.pos.x + (player.flipX ? -40 : 40);
 
     k.add([
-      k.rect(40, 40),
-      k.area(),
+      k.rect(40,40), 
+      k.area(), 
       k.pos(slashX, player.pos.y + 30),
       k.opacity(0),
       k.anchor("center"),
@@ -107,22 +106,23 @@ export default function loadGameScene(k: KaboomCtx, dispatch: any, setLocalDebug
     const options = {
       onEnd: () => {
         k.destroyAll(player.id + "attackHitbox");
-        handleAnimation();
+        handleAnimation;
       }
     };
 
     if (attackSequence === 0 || timeSinceLastAttack > ATTACK_INTERVAL) {
       player.play("attack1", options);
-      attackSequence = 1;
+      attackSequence = 1; 
     } else if (attackSequence === 1 && timeSinceLastAttack <= ATTACK_INTERVAL) {
       player.play("attack2", options);
-      attackSequence = 2;
+      attackSequence = 2; 
     } else if (attackSequence === 2 && timeSinceLastAttack <= ATTACK_INTERVAL) {
       player.play("attack3", options);
-      attackSequence = 0;
+      attackSequence = 0; 
     }
 
     k.play("attack");
-    lastAttackTime = currentTime;
+    lastAttackTime = currentTime; 
   }
 }
+
