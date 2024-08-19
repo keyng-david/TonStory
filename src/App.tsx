@@ -3,8 +3,8 @@ import { Route, Routes } from 'react-router-dom';
 import Navbar from "./components/Navbar";
 // import Game from "./pages.tsx/Game"; 
 // import Shop from "./pages.tsx/Shop"; // Uncomment this line to test Shop route
-import Share from "./pages.tsx/Share"; // Uncomment this line to test Share route
-// import Scoreboard from "./pages.tsx/Scoreboard"; // Uncomment this line to test Scoreboard route
+// import Share from "./pages.tsx/Share"; // Uncomment this line to test Share route
+import Scoreboard from "./pages.tsx/Scoreboard"; // Uncomment this line to test Scoreboard route
 
 function ErrorBoundary({ children }: { children: React.ReactNode }) {
   return (
@@ -28,7 +28,7 @@ export default function App() {
         <h2>{debugMessage}</h2>
         <Routes>
           {/* Test Game Route */}
-          <Route path="/" element={<Share />} />
+          <Route path="/" element={<Scoreboard />} />
 
           {/* Test Shop Route */}
           {/* <Route path="/" element={<Shop />} /> */}
