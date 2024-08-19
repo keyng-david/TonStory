@@ -4,9 +4,6 @@ import { getScoreboardDebug } from "../api";
 import { Table } from "antd";
 import styled from "styled-components";
 
-//columns background color black
-//rows background color grey
-//hover color white
 const StyledTable = styled(Table)`
   border: 0;
   .ant-table-thead > tr > th {
@@ -21,22 +18,22 @@ const StyledTable = styled(Table)`
   }
 `;
 
-export default function Scoreboard() {
+export default function Scoreboard({ setLocalDebugMessage }: { setLocalDebugMessage: (msg: string) => void }) {
   const [scoreboard, setScoreboard] = useState<any[]>([]);
 
   useEffect(() => {
     loadScoreboard();
-  }, [])
+  }, []);
 
   async function loadScoreboard() {
-    const score = await getScoreboardDebug();
+    const score = await getScoreboardDebug(setLocalDebugMessage);  // Pass the debug function here
     setScoreboard(score);
     console.log("Scoreboard loaded", score);
   }
-  
+
   return (
     <Fullscreen>
-      <StyledTable 
+      <StyledTable
         dataSource={scoreboard}
         columns={[
           { title: 'User', dataIndex: 'username', key: 'username' },
