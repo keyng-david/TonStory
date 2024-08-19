@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Fullscreen } from "../utils/styled";
-import { getScoreboard } from "../api";
+import { getScoreboardDebug } from "../api";
 import { Table } from "antd";
 import styled from "styled-components";
 
@@ -29,7 +29,7 @@ export default function Scoreboard() {
   }, [])
 
   async function loadScoreboard() {
-    const score = await getScoreboard();
+    const score = await getScoreboardDebug();
     setScoreboard(score);
     console.log("Scoreboard loaded", score);
   }
